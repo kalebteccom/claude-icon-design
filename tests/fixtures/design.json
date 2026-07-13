@@ -1,0 +1,31 @@
+{
+  "name": "Test Mark",
+  "slug": "test-mark",
+  "aria_label": "Test Mark",
+  "description": "A geometric test mark.",
+  "story": "Two rails and a bridge create a compact, open silhouette.",
+  "source_svg": "mark.svg",
+  "palette": {
+    "ink": "#202124",
+    "paper": "#F8F9FA",
+    "paper_bright": "#FFFFFF",
+    "paper_shadow": "#DADCE0",
+    "background_top": "#202124",
+    "background_bottom": "#303134",
+    "accent": "#4C8BF5"
+  },
+  "geometry": {
+    "tile_radius_ratio": 0.22,
+    "favicon_mark_scale": 0.78,
+    "app_mark_scale": 0.78,
+    "avatar_mark_scale": 0.86,
+    "preview_margin_ratio": 0.098,
+    "preview_radius_ratio": 0.181
+  },
+  "material": "glass",
+  "license": {
+    "mode": "all-rights-reserved",
+    "holder": "Test Mark",
+    "year": 2026
+  }
+}

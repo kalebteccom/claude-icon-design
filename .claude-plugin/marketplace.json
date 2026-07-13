@@ -1,0 +1,22 @@
+{
+  "name": "kalebtec-icon-design",
+  "owner": {
+    "name": "Kalebtec"
+  },
+  "description": "A focused Claude Code plugin for original icon and brand-mark design.",
+  "plugins": [
+    {
+      "name": "icon-design",
+      "source": "./plugins/icon-design",
+      "description": "Design, refine, validate, and package production-ready icons and compact brand marks.",
+      "category": "design",
+      "tags": [
+        "icons",
+        "svg",
+        "favicons",
+        "branding"
+      ],
+      "strict": true
+    }
+  ]
+}

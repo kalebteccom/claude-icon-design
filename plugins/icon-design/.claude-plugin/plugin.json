@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "icon-design",
+  "displayName": "Icon Design",
+  "version": "1.0.0",
+  "description": "Design, refine, validate, and package production-ready icons and compact brand marks.",
+  "author": {
+    "name": "Rowin Hernandez",
+    "url": "https://github.com/rowinbot"
+  },
+  "homepage": "https://github.com/rowinbot/claude-icon-design",
+  "repository": "https://github.com/rowinbot/claude-icon-design",
+  "license": "MIT",
+  "keywords": [
+    "icons",
+    "svg",
+    "favicons",
+    "app-icons",
+    "branding"
+  ]
+}

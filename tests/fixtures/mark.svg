@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Test Mark">
+  <rect x="16" y="16" width="18" height="64" rx="4" fill="currentColor"/>
+  <rect x="62" y="16" width="18" height="64" rx="4" fill="currentColor"/>
+  <rect x="30" y="39" width="36" height="18" rx="3" fill="currentColor"/>
+</svg>

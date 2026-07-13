@@ -1,0 +1,31 @@
+{
+  "name": "Example Product",
+  "slug": "example-product",
+  "aria_label": "Example Product",
+  "description": "A compact mark for Example Product.",
+  "story": "Replace this with the visual idea and the reason the geometry supports it.",
+  "source_svg": "mark.svg",
+  "palette": {
+    "ink": "#202124",
+    "paper": "#F8F9FA",
+    "paper_bright": "#FFFFFF",
+    "paper_shadow": "#DADCE0",
+    "background_top": "#202124",
+    "background_bottom": "#303134",
+    "accent": "#4C8BF5"
+  },
+  "geometry": {
+    "tile_radius_ratio": 0.22,
+    "favicon_mark_scale": 0.78,
+    "app_mark_scale": 0.78,
+    "avatar_mark_scale": 0.86,
+    "preview_margin_ratio": 0.098,
+    "preview_radius_ratio": 0.181
+  },
+  "material": "glass",
+  "license": {
+    "mode": "all-rights-reserved",
+    "holder": "Example Product",
+    "year": 2026
+  }
+}
