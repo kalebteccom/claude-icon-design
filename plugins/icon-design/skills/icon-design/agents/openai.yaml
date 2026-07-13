@@ -1,0 +1,4 @@
+interface:
+  display_name: "Icon Design"
+  short_description: "Discover, refine, and export original icons"
+  default_prompt: "Use $icon-design to open the guided brief builder for a new icon project."

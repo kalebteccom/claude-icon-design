@@ -1,7 +1,7 @@
 {
   "name": "icon-design",
-  "version": "1.1.0+codex.20260713180207",
-  "description": "Design, refine, validate, and package production-ready icons and compact brand marks.",
+  "version": "1.2.0+codex.20260713185029",
+  "description": "Discover, refine, validate, and package production-ready icons and compact brand marks.",
   "author": {
     "name": "Kalebtec",
     "url": "https://github.com/kalebteccom"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Icon Design",
-    "shortDescription": "Design and package production-ready icons.",
-    "longDescription": "A vector-first workflow for designing, auditing, refining, and exporting icons, favicons, app icons, and compact brand marks.",
+    "shortDescription": "Explore, refine, and export original icons.",
+    "longDescription": "A guided workflow for building an icon brief, exploring numbered directions, refining a selected concept, and exporting production assets.",
     "developerName": "Kalebtec",
     "category": "Design",
     "capabilities": [
@@ -28,9 +28,9 @@
     ],
     "websiteURL": "https://github.com/kalebteccom/claude-icon-design",
     "defaultPrompt": [
-      "Design an original icon and verify it at native sizes.",
-      "Refine this SVG and package a complete brand suite.",
-      "Audit this icon family for clarity and consistency."
+      "Open the guided icon brief builder.",
+      "Start a 20-direction icon discovery round.",
+      "Refine a numbered icon concept and stop for selection."
     ]
   }
 }

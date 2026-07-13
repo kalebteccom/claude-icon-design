@@ -50,9 +50,21 @@ DISALLOWED_SVG_TAGS = {
     "image",
     "script",
     "set",
+    "style",
     "text",
     "video",
 }
+GRAPHICAL_SVG_TAGS = {
+    "circle",
+    "ellipse",
+    "line",
+    "path",
+    "polygon",
+    "polyline",
+    "rect",
+    "use",
+}
+NON_RENDERING_SVG_TAGS = {"clipPath", "defs", "mask", "pattern", "symbol"}
 PRESENTATION_ATTRIBUTES = (
     "fill",
     "stroke",
@@ -190,6 +202,18 @@ def svg_parts(path: Path) -> Tuple[str, float]:
     if "currentColor" not in raw:
         raise ValueError("The source SVG must use currentColor")
 
+    parent_map = {child: parent for parent in root.iter() for child in parent}
+
+    def paint_value(element: ET.Element, name: str) -> str:
+        current: Optional[ET.Element] = element
+        while current is not None:
+            value = current.attrib.get(name)
+            if value is not None and value != "inherit":
+                return value
+            current = parent_map.get(current)
+        return "black" if name == "fill" else "none"
+
+    visible_current_color_shapes = 0
     for element in root.iter():
         tag = local_name(element.tag)
         if tag in DISALLOWED_SVG_TAGS:
@@ -226,6 +250,29 @@ def svg_parts(path: Path) -> Tuple[str, float]:
                     raise ValueError(
                         f"Visible {name} values must be currentColor, none, inherit, or an internal paint"
                     )
+
+        if tag not in GRAPHICAL_SVG_TAGS:
+            continue
+        ancestors = []
+        ancestor = parent_map.get(element)
+        while ancestor is not None:
+            ancestors.append(local_name(ancestor.tag))
+            ancestor = parent_map.get(ancestor)
+        if any(ancestor_tag in NON_RENDERING_SVG_TAGS for ancestor_tag in ancestors):
+            continue
+
+        fill = "none" if tag == "line" else paint_value(element, "fill")
+        stroke = paint_value(element, "stroke")
+        visible_paints = [paint for paint in (fill, stroke) if paint != "none"]
+        if any(paint != "currentColor" for paint in visible_paints):
+            raise ValueError(
+                f"Visible <{tag}> paint must resolve to currentColor or none"
+            )
+        if "currentColor" in visible_paints:
+            visible_current_color_shapes += 1
+
+    if visible_current_color_shapes == 0:
+        raise ValueError("The source SVG has no visible currentColor geometry")
 
     opening = re.search(r"<svg\b[^>]*>", raw, flags=re.IGNORECASE)
     opening_end = opening.end() - 1 if opening else -1

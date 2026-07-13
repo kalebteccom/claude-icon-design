@@ -199,6 +199,12 @@ def validate_suite(root: Path, archive: Optional[Path] = None) -> List[str]:
             with zipfile.ZipFile(archive) as zipped:
                 names = {name for name in zipped.namelist() if not name.endswith("/")}
                 bad = zipped.testzip()
+                if names == expected and bad is None:
+                    for relative in sorted(expected):
+                        if zipped.read(relative) != (root / relative).read_bytes():
+                            raise ValueError(
+                                f"Zip member differs from suite file: {relative}"
+                            )
         except zipfile.BadZipFile as error:
             raise ValueError(f"Invalid zip: {archive}") from error
         if bad:

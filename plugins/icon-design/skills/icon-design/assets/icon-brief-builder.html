@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Icon brief builder</title>
+  <style>
+    :root {
+      --page: #f2efe8;
+      --surface: #fbfaf6;
+      --surface-strong: #ffffff;
+      --ink: #1c1d1a;
+      --muted: #666861;
+      --line: #d8d4ca;
+      --accent: #c54d34;
+      --accent-soft: #f3d9d0;
+      --accent-button-ink: #ffffff;
+      --focus: #2f6fed;
+      --shadow: 0 18px 50px rgba(31, 29, 23, 0.09);
+      --radius: 18px;
+      --radius-small: 11px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #171815;
+        --surface: #20211e;
+        --surface-strong: #292a26;
+        --ink: #f4f1e9;
+        --muted: #b3b2aa;
+        --line: #41423d;
+        --accent: #ef775a;
+        --accent-soft: #47281f;
+        --accent-button-ink: #171815;
+        --focus: #8aafff;
+        --shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    button, label, input, select { -webkit-tap-highlight-color: transparent; }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    .style-card:has(input:focus-visible) {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .shell {
+      width: min(1420px, 100%);
+      margin: 0 auto;
+      padding: 44px 28px 64px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 5.1rem);
+      font-weight: 600;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+
+    .intro {
+      max-width: 670px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .stage-map {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 7px;
+      align-items: center;
+      padding-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .stage-map b {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(330px, 0.65fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel,
+    .output-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .panel { padding: clamp(22px, 4vw, 40px); }
+
+    .output-panel {
+      position: sticky;
+      top: 20px;
+      padding: 24px;
+    }
+
+    .step-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 0 0 34px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step-button {
+      width: 100%;
+      padding: 12px 10px;
+      border: 0;
+      border-bottom: 2px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .step-button[aria-current="step"] {
+      border-color: var(--accent);
+      color: var(--ink);
+    }
+
+    .step-button span {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .step-button strong { font-weight: 600; }
+
+    .step[hidden] { display: none; }
+
+    .step h2,
+    .output-panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+    }
+
+    .step-lede {
+      max-width: 720px;
+      margin: 9px 0 28px;
+      color: var(--muted);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 19px;
+    }
+
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+
+    .field label,
+    .field legend,
+    .group-label {
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 650;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 400;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface-strong);
+      color: var(--ink);
+    }
+
+    input[type="text"], input[type="number"], select { min-height: 46px; padding: 0 12px; }
+    textarea { min-height: 104px; padding: 11px 12px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.72; }
+
+    fieldset {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .style-card {
+      position: relative;
+      display: grid;
+      min-height: 176px;
+      grid-template-rows: 88px auto;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-strong);
+      cursor: pointer;
+      transition: border-color 150ms ease, transform 150ms ease, background 150ms ease;
+    }
+
+    .style-card:hover { transform: translateY(-2px); }
+
+    .style-card:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .style-card input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .style-card::after {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--surface-strong);
+      color: transparent;
+      content: "✓";
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .style-card:has(input:checked)::after {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-button-ink);
+    }
+
+    .style-card svg {
+      width: 100%;
+      height: 88px;
+      color: var(--ink);
+    }
+
+    .style-card strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .style-card small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.73rem;
+    }
+
+    .selection-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .axes { display: grid; gap: 18px; }
+
+    .axis {
+      display: grid;
+      grid-template-columns: 128px minmax(0, 1fr) 100px;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .axis label { font-size: 0.84rem; font-weight: 650; }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .axis output {
+      display: grid;
+      min-height: 34px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .axis-ends {
+      display: flex;
+      grid-column: 2;
+      justify-content: space-between;
+      margin-top: -10px;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .character-lab {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 24px;
+      margin-top: 30px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+
+    .character-preview {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .character-preview-frame {
+      display: grid;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-strong);
+      color: var(--ink);
+    }
+
+    #character-preview {
+      width: 78%;
+      height: 78%;
+    }
+
+    .character-preview strong,
+    .matrix-head strong {
+      font-size: 0.86rem;
+      font-weight: 650;
+    }
+
+    .character-preview p,
+    .matrix-head p,
+    .matrix-selection {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .matrix-panel { min-width: 0; }
+
+    .matrix-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .character-matrix {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    .matrix-cell {
+      display: grid;
+      min-width: 0;
+      aspect-ratio: 1;
+      place-items: center;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-strong);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .matrix-cell:hover { border-color: var(--accent); }
+
+    .matrix-cell[aria-checked="true"] {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 2px var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .matrix-cell svg {
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .matrix-selection { margin-top: 9px; }
+
+    .delivery-options {
+      margin-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+
+    .delivery-options summary {
+      padding: 20px 0 4px;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.86rem;
+      font-weight: 650;
+    }
+
+    .delivery-options[open] summary { margin-bottom: 16px; }
+
+    .output-target {
+      display: grid;
+      gap: 6px;
+      margin-top: 18px;
+    }
+
+    .output-target label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .step-actions,
+    .export-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .step-actions {
+      justify-content: space-between;
+      margin-top: 34px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .button {
+      min-height: 42px;
+      padding: 0 15px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-strong);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 620;
+    }
+
+    .button:hover { border-color: var(--accent); }
+
+    .button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-button-ink);
+    }
+
+    .button.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+
+    .output-kicker {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .output-panel h2 { font-size: 1.55rem; }
+
+    #prompt-output {
+      min-height: 390px;
+      margin: 18px 0 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+
+    .export-actions .button { flex: 1 1 130px; }
+
+    .output-note {
+      margin: 13px 0 0;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .toast {
+      min-height: 22px;
+      margin-top: 10px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 980px) {
+      .masthead { grid-template-columns: 1fr; }
+      .stage-map { justify-content: start; }
+      .workspace { grid-template-columns: 1fr; }
+      .output-panel { position: static; }
+      #prompt-output { min-height: 280px; }
+      .character-lab { grid-template-columns: 190px minmax(0, 1fr); }
+    }
+
+    @media (max-width: 700px) {
+      .shell { padding: 28px 16px 44px; }
+      .panel, .output-panel { border-radius: 14px; }
+      .step-nav { grid-template-columns: repeat(3, 1fr); }
+      .field-grid, .style-grid { grid-template-columns: 1fr; }
+      .axis { grid-template-columns: 1fr 44px; gap: 6px 10px; }
+      .axis input { grid-column: 1 / -1; grid-row: 2; }
+      .axis output { grid-column: 2; grid-row: 1; }
+      .axis-ends { grid-column: 1 / -1; grid-row: 3; margin-top: 0; }
+      .style-card { min-height: 142px; grid-template-columns: 110px 1fr; grid-template-rows: 1fr; align-items: center; }
+      .style-card svg { height: 74px; }
+      .character-lab { grid-template-columns: 1fr; }
+      .character-preview { grid-template-columns: 118px 1fr; align-items: center; }
+      .character-matrix { gap: 3px; }
+      .matrix-cell { border-radius: 5px; padding: 2px; }
+      .matrix-head { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">Kalebtec / Icon Design</p>
+        <h1>Shape the brief before drawing.</h1>
+        <p class="intro">Choose a visual language, tune the character, and export a compact brief for the 20-direction discovery round. Your choices stay in this browser.</p>
+      </div>
+      <div class="stage-map" aria-label="Production stages">
+        <b>1</b><span>Discover</span>
+        <b>2</b><span>Refine</span>
+        <b>3</b><span>Finish</span>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <form id="brief-form" class="panel">
+        <ol class="step-nav" aria-label="Brief builder steps">
+          <li><button class="step-button" type="button" data-step-target="0" aria-current="step"><span>01</span><strong>Purpose</strong></button></li>
+          <li><button class="step-button" type="button" data-step-target="1"><span>02</span><strong>References</strong></button></li>
+          <li><button class="step-button" type="button" data-step-target="2"><span>03</span><strong>Character</strong></button></li>
+        </ol>
+
+        <section class="step" data-step="0">
+          <h2>What should the icon communicate?</h2>
+          <p class="step-lede">Start with the job and audience. A useful symbol comes from meaning before style.</p>
+          <div class="field-grid">
+            <div class="field">
+              <label for="project">Project or product</label>
+              <input id="project" name="project" type="text" placeholder="Northstar" required>
+            </div>
+            <div class="field">
+              <label for="icon-class">Icon class</label>
+              <select id="icon-class" name="iconClass">
+                <option value="brand mark">Brand mark</option>
+                <option value="app or product icon">App or product icon</option>
+                <option value="favicon">Favicon</option>
+                <option value="system icon">System icon</option>
+                <option value="workflow icon">Workflow icon</option>
+                <option value="monogram">Monogram</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="purpose">Purpose <span class="hint">What does it represent or help someone do?</span></label>
+              <textarea id="purpose" name="purpose" placeholder="A privacy-first analytics product that turns noisy activity into a clear direction." required></textarea>
+            </div>
+            <div class="field full">
+              <label for="audience">Audience and setting</label>
+              <input id="audience" name="audience" type="text" placeholder="Independent product teams; shown beside technical tools">
+            </div>
+            <div class="field full">
+              <label for="territories">Promising metaphors or ideas <span class="hint">Comma-separated; uncertainty is fine.</span></label>
+              <input id="territories" name="territories" type="text" placeholder="signal, path, focus, protected window">
+            </div>
+            <div class="field full">
+              <label for="avoid">Avoid</label>
+              <input id="avoid" name="avoid" type="text" placeholder="generic shield, eye symbol, lightning bolt, competitor lookalikes">
+            </div>
+          </div>
+          <div class="step-actions">
+            <button class="button ghost" type="button" data-reset>Reset brief</button>
+            <button class="button primary" type="button" data-next>Choose references</button>
+          </div>
+        </section>
+
+        <section class="step" data-step="1" hidden>
+          <h2>Choose up to three visual languages.</h2>
+          <p class="step-lede">The specimens are original reference shapes, not marks to copy. Mix languages when the combination has a clear reason.</p>
+          <fieldset>
+            <legend class="group-label">Style reference sheet</legend>
+            <div class="style-grid" id="style-grid">
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="geometric">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Geometric style specimen"><path d="M12 44 32 10l20 34-20 10Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/><circle cx="32" cy="36" r="7" fill="currentColor"/></svg>
+                <span><strong>Geometric</strong><small>Primitives, ratios, crisp structure</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="monoline">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Monoline style specimen"><path d="M14 44c0-17 10-28 20-28 9 0 16 7 16 16 0 10-8 17-18 17H19" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+                <span><strong>Monoline</strong><small>One weight, open motion, light touch</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="solid glyph">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Solid glyph style specimen"><path d="M12 18c0-4 3-7 7-7h16c10 0 17 7 17 17 0 12-10 23-28 27V43H19c-4 0-7-3-7-7Z" fill="currentColor"/></svg>
+                <span><strong>Solid glyph</strong><small>Bold silhouette, compact at small sizes</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="negative space">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Negative-space style specimen"><path d="M8 32 31 9l25 23-25 23Zm19-8v16l12-8Z" fill="currentColor" fill-rule="evenodd"/></svg>
+                <span><strong>Negative space</strong><small>A second idea cut from one mass</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="modular">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Modular style specimen"><rect x="9" y="9" width="20" height="20" rx="4" fill="currentColor"/><rect x="35" y="9" width="20" height="20" rx="10" fill="currentColor"/><rect x="9" y="35" width="20" height="20" rx="10" fill="currentColor"/><path d="M35 35h20v20H35z" fill="currentColor"/></svg>
+                <span><strong>Modular</strong><small>Repeated units and systematic assembly</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="organic">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Organic style specimen"><path d="M12 38C7 23 20 9 35 12c15 3 21 21 12 33-8 11-29 11-35-7Z" fill="currentColor"/><path d="M22 35c7-1 11-6 15-14" fill="none" stroke="var(--surface-strong)" stroke-width="4" stroke-linecap="round"/></svg>
+                <span><strong>Organic</strong><small>Living curves and uneven balance</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="technical">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Technical style specimen"><path d="M10 20h13V10h18v10h13v24H41v10H23V44H10Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M23 32h18M32 23v18" stroke="currentColor" stroke-width="3"/></svg>
+                <span><strong>Technical</strong><small>Measured joints and engineered detail</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="humanist">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Humanist style specimen"><path d="M12 47c6-2 8-8 8-15V14h9v18c0 7 4 11 9 11s9-4 9-11V14h9v18c0 14-8 23-20 23-6 0-11-2-15-6-2 3-5 5-9 6Z" fill="currentColor"/></svg>
+                <span><strong>Humanist</strong><small>Warm rhythm and hand-aware proportions</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="pixel informed">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Pixel-informed style specimen"><path d="M10 10h18v9h9v9h17v26H28v-9h-9v-9h-9Z" fill="currentColor"/></svg>
+                <span><strong>Pixel-informed</strong><small>Stepped form made for tiny rendering</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="emblem">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Emblem style specimen"><path d="M32 7 53 19v25L32 57 11 44V19Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="m22 39 10-20 10 20-10-5Z" fill="currentColor"/></svg>
+                <span><strong>Emblem</strong><small>Contained, ownable, badge-like presence</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="monogram">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Monogram style specimen"><path d="M12 51V13l20 25 20-25v38" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/></svg>
+                <span><strong>Monogram</strong><small>Letter structure without typesetting</small></span>
+              </label>
+              <label class="style-card">
+                <input type="checkbox" name="styles" value="dimensional">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Dimensional style specimen"><path d="m32 7 23 13-23 13L9 20Z" fill="currentColor"/><path d="m9 26 23 13 23-13v12L32 51 9 38Z" fill="currentColor" opacity=".58"/></svg>
+                <span><strong>Dimensional</strong><small>Depth in derived tiles, flat vector master</small></span>
+              </label>
+            </div>
+            <p class="selection-note"><span id="style-count">0</span>/3 selected</p>
+          </fieldset>
+          <div class="step-actions">
+            <button class="button" type="button" data-back>Back</button>
+            <button class="button primary" type="button" data-next>Tune character</button>
+          </div>
+        </section>
+
+        <section class="step" data-step="2" hidden>
+          <h2>Set the character, not the drawing.</h2>
+          <p class="step-lede">These axes guide variety without forcing twenty versions of one shape. The preview deliberately holds style at a monochrome solid glyph so only character changes are visible.</p>
+          <div class="axes">
+            <div class="axis"><label for="complexity">Complexity</label><input id="complexity" name="complexity" type="range" min="1" max="5" value="2"><output for="complexity">2 · spare</output><div class="axis-ends"><span>Minimal</span><span>Intricate</span></div></div>
+            <div class="axis"><label for="geometry">Geometry</label><input id="geometry" name="geometry" type="range" min="1" max="5" value="4"><output for="geometry">4 · geometric</output><div class="axis-ends"><span>Organic</span><span>Strict</span></div></div>
+            <div class="axis"><label for="energy">Energy</label><input id="energy" name="energy" type="range" min="1" max="5" value="3"><output for="energy">3 · steady</output><div class="axis-ends"><span>Still</span><span>Dynamic</span></div></div>
+            <div class="axis"><label for="tone">Playfulness</label><input id="tone" name="tone" type="range" min="1" max="5" value="2"><output for="tone">2 · restrained</output><div class="axis-ends"><span>Serious</span><span>Playful</span></div></div>
+            <div class="axis"><label for="density">Density</label><input id="density" name="density" type="range" min="1" max="5" value="3"><output for="density">3 · balanced</output><div class="axis-ends"><span>Open</span><span>Dense</span></div></div>
+            <div class="axis"><label for="novelty">Novelty</label><input id="novelty" name="novelty" type="range" min="1" max="5" value="4"><output for="novelty">4 · distinctive</output><div class="axis-ends"><span>Familiar</span><span>Experimental</span></div></div>
+          </div>
+
+          <div class="character-lab">
+            <div class="character-preview">
+              <div class="character-preview-frame">
+                <svg id="character-preview" viewBox="0 0 64 64" role="img" aria-label="Current character preview"></svg>
+              </div>
+              <div>
+                <strong>Current character</strong>
+                <p>The full 1–5 values are interpolated here.</p>
+              </div>
+            </div>
+            <div class="matrix-panel">
+              <div class="matrix-head">
+                <strong>64 character permutations</strong>
+                <p>Rows: complexity, geometry, energy. Columns: playfulness, density, novelty. Cells show the poles; selecting one sets low axes to 2 and high axes to 4.</p>
+              </div>
+              <div id="character-matrix" class="character-matrix" role="radiogroup" aria-label="All low and high permutations of the six character axes"></div>
+              <p id="matrix-selection" class="matrix-selection"></p>
+            </div>
+          </div>
+
+          <details class="delivery-options">
+            <summary>Customize delivery</summary>
+            <p class="step-lede">The complete SVG, favicon, app-icon, avatar, comparison-sheet, source, and zip package is always included.</p>
+            <div class="field-grid">
+              <div class="field">
+                <label for="smallest">Smallest required size</label>
+                <select id="smallest" name="smallest">
+                  <option value="16 px">16 px</option>
+                  <option value="20 px">20 px</option>
+                  <option value="24 px">24 px</option>
+                  <option value="32 px">32 px</option>
+                  <option value="48 px">48 px</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="backgrounds">Backgrounds</label>
+                <input id="backgrounds" name="backgrounds" type="text" value="light and dark" placeholder="light, dark, muted, selected">
+              </div>
+              <div class="field full">
+                <label for="palette">Existing palette or constraints</label>
+                <input id="palette" name="palette" type="text" placeholder="Ink #171815, paper #FBFAF7, accent #C54D34">
+              </div>
+              <div class="field full">
+                <label for="delivery-notes">Additional delivery notes</label>
+                <textarea id="delivery-notes" name="deliveryNotes" placeholder="Any extra platform, licensing, or handoff constraint."></textarea>
+              </div>
+            </div>
+          </details>
+
+          <div class="step-actions">
+            <button class="button" type="button" data-back>Back</button>
+            <button class="button primary" type="button" data-copy>Copy discovery prompt</button>
+          </div>
+        </section>
+      </form>
+
+      <aside class="output-panel" aria-labelledby="output-title">
+        <div class="output-kicker"><span>Live export</span><span id="completion">6 fields set</span></div>
+        <h2 id="output-title">Discovery prompt</h2>
+        <div class="output-target">
+          <label for="target">Paste into</label>
+          <select id="target" name="target" form="brief-form">
+            <option value="codex">Codex</option>
+            <option value="claude-code">Claude Code</option>
+            <option value="any-chatbot">Another chatbot</option>
+          </select>
+        </div>
+        <textarea id="prompt-output" readonly spellcheck="false" aria-label="Generated discovery prompt"></textarea>
+        <div class="export-actions">
+          <button class="button primary" type="button" data-copy>Copy prompt</button>
+          <button class="button" type="button" id="download-text">Save text</button>
+          <button class="button" type="button" id="download-json">Save JSON</button>
+          <button class="button" type="button" id="import-json">Import JSON</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </div>
+        <p class="output-note">Paste this into Codex, Claude Code, or another chat. It requests discovery only and preserves refinement as a separate decision.</p>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const storageKey = "kalebtec-icon-brief-v1";
+      const form = document.getElementById("brief-form");
+      const panels = [...document.querySelectorAll(".step")];
+      const stepButtons = [...document.querySelectorAll("[data-step-target]")];
+      const promptOutput = document.getElementById("prompt-output");
+      const toast = document.getElementById("toast");
+      const styleCount = document.getElementById("style-count");
+      const completion = document.getElementById("completion");
+      let activeStep = 0;
+      let toastTimer;
+      let storageWarningShown = false;
+
+      const axisWords = {
+        complexity: ["minimal", "spare", "balanced", "detailed", "intricate"],
+        geometry: ["organic", "soft", "balanced", "geometric", "strictly geometric"],
+        energy: ["still", "calm", "steady", "active", "dynamic"],
+        tone: ["serious", "restrained", "balanced", "friendly", "playful"],
+        density: ["very open", "open", "balanced", "compact", "dense"],
+        novelty: ["familiar", "recognizable", "balanced", "distinctive", "experimental"]
+      };
+      const axisPoles = {
+        complexity: ["minimal", "intricate"],
+        geometry: ["organic", "geometric"],
+        energy: ["still", "dynamic"],
+        tone: ["serious", "playful"],
+        density: ["open", "dense"],
+        novelty: ["familiar", "experimental"]
+      };
+      const axisNames = Object.keys(axisWords);
+
+      function checkedValues(name) {
+        return [...form.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value);
+      }
+
+      function value(name) {
+        return String(new FormData(form).get(name) || "").trim();
+      }
+
+      function getState() {
+        const axes = {};
+        Object.keys(axisWords).forEach((name) => {
+          axes[name] = Number(value(name));
+        });
+        return {
+          schema: "kalebtec.icon-brief.v1",
+          target: value("target"),
+          project: value("project"),
+          iconClass: value("iconClass"),
+          purpose: value("purpose"),
+          audience: value("audience"),
+          territories: value("territories"),
+          avoid: value("avoid"),
+          styles: checkedValues("styles"),
+          axes,
+          smallest: value("smallest"),
+          conceptCount: 20,
+          backgrounds: value("backgrounds"),
+          palette: value("palette"),
+          deliveryNotes: value("deliveryNotes"),
+          fullPackage: true,
+          workflow: {
+            stage: "discovery",
+            round: 1,
+            output: "numbered concept SVGs, concepts.json, and the standard PNG sheet",
+            stopAfterStage: true
+          }
+        };
+      }
+
+      function display(value, fallback = "not specified") {
+        return value || fallback;
+      }
+
+      function axisSummary(axes) {
+        return Object.entries(axes)
+          .map(([name, score]) => `${name} ${score}/5 (${axisWords[name][score - 1]})`)
+          .join("; ");
+      }
+
+      function buildPrompt(state) {
+        const styles = state.styles.length ? state.styles.join(", ") : "open; choose from the brief";
+        const opening = state.target === "claude-code"
+          ? "/icon-design:icon-design\nStart at discovery and stop after the discovery handoff."
+          : state.target === "any-chatbot"
+            ? "Run a staged icon-design process. Start at discovery and stop after the discovery handoff."
+            : "Use $icon-design. Start at discovery and stop after the discovery handoff.";
+        return [
+          opening,
+          `Project: ${display(state.project, "unnamed project")} (${state.iconClass}).`,
+          `Purpose: ${display(state.purpose)}.`,
+          `Audience/context: ${display(state.audience)}.`,
+          `Metaphor territories: ${display(state.territories, "derive several useful territories from the purpose")}.`,
+          `Style references: ${styles}. Do not imitate an existing mark.`,
+          `Character: ${axisSummary(state.axes)}.`,
+          `Color: monochrome currentColor master; color only in derived assets. Palette constraints: ${display(state.palette, "none supplied")}.`,
+          `Verification: smallest size ${state.smallest}; backgrounds ${display(state.backgrounds)}.`,
+          `Avoid: ${display(state.avoid, "obvious clichés and competitor lookalikes")}.`,
+          `Discovery output: ${state.conceptCount} genuinely distinct representations, IDs D1-01 through D1-${String(state.conceptCount).padStart(2, "0")}, one currentColor SVG per direction, concepts.json, and the standard numbered concept-sheet PNG. Show large, dark-background, and native-size views.`,
+          "After the sheet, summarize the territories briefly and wait for a numbered selection or another discovery instruction.",
+          "After final approval, export the complete standard package: canonical and fixed SVGs, favicon PNG/ICO/SVG, app icon, social avatar, Composer layers, comparison sheets, source, README, license, and reproducible zip.",
+          state.deliveryNotes ? `Additional delivery notes: ${state.deliveryNotes}.` : ""
+        ].filter(Boolean).join("\n");
+      }
+
+      function number(value) {
+        return Number(value.toFixed(2));
+      }
+
+      function glyphMarkup(axes, id) {
+        const complexity = axes.complexity;
+        const geometry = axes.geometry;
+        const energy = axes.energy;
+        const playfulness = axes.tone;
+        const density = axes.density;
+        const novelty = axes.novelty;
+        const radius = number(8 - geometry * 6);
+        const spread = number(14 - density * 6);
+        const nodeWidth = number(13 + density * 3);
+        const nodeHeight = number(25 + complexity * 3);
+        const leftX = number(32 - spread - nodeWidth / 2);
+        const rightX = number(32 + spread - nodeWidth / 2 + novelty * 2);
+        const leftY = number(32 - nodeHeight / 2 + playfulness * 2);
+        const rightY = number(32 - nodeHeight / 2 - playfulness * 5);
+        const connectorHeight = number(6 + density * 3);
+        const connectorY = number(32 - connectorHeight / 2);
+        const connectorX = number(leftX + nodeWidth - 1);
+        const connectorWidth = number(rightX - connectorX + 1);
+        const rotation = number(-energy * 17);
+        const satelliteRadius = number(2.2 + complexity * 1.2);
+        const maskId = `character-mask-${id}`;
+        return `<defs><mask id="${maskId}"><rect width="64" height="64" fill="white"/><circle cx="${number(35 + novelty * 4)}" cy="${number(32 - playfulness * 3)}" r="${number(2 + novelty * 4)}" fill="black" opacity="${number(novelty)}"/></mask></defs><g transform="rotate(${rotation} 32 32)" fill="currentColor" mask="url(#${maskId})"><rect x="${leftX}" y="${leftY}" width="${nodeWidth}" height="${nodeHeight}" rx="${radius}"/><rect x="${rightX}" y="${rightY}" width="${nodeWidth}" height="${nodeHeight}" rx="${radius}" transform="rotate(${number(novelty * 12)} ${number(rightX + nodeWidth / 2)} ${number(rightY + nodeHeight / 2)})"/><rect x="${connectorX}" y="${connectorY}" width="${connectorWidth}" height="${connectorHeight}" rx="${number(radius / 2)}"/><circle cx="${number(32 - spread - 5)}" cy="${number(17 + playfulness * 3)}" r="${satelliteRadius}" opacity="${number(complexity)}"/><circle cx="${number(32 + spread + 5)}" cy="${number(47 - playfulness * 5)}" r="${satelliteRadius}" opacity="${number(complexity * 0.72)}"/></g>`;
+      }
+
+      function binaryAxes(bits) {
+        const axes = {};
+        axisNames.forEach((name, index) => { axes[name] = bits[index]; });
+        return axes;
+      }
+
+      function bitLabel(bits) {
+        return axisNames.map((name, index) => axisPoles[name][bits[index]]).join(" · ");
+      }
+
+      function quantizedBits(state) {
+        return axisNames.map((name) => state.axes[name] <= 2 ? 0 : 1);
+      }
+
+      function writeMatrixLabel(bits, prefix = "Selected mix") {
+        document.getElementById("matrix-selection").textContent = `${prefix}: ${bitLabel(bits)}.`;
+      }
+
+      function renderCharacterLab(state) {
+        const preview = document.getElementById("character-preview");
+        const continuous = {};
+        axisNames.forEach((name) => { continuous[name] = (state.axes[name] - 1) / 4; });
+        preview.innerHTML = glyphMarkup(continuous, "current");
+
+        const matrix = document.getElementById("character-matrix");
+        if (!matrix.children.length) {
+          for (let index = 0; index < 64; index += 1) {
+            const bits = axisNames.map((_, bitIndex) => (index >> (5 - bitIndex)) & 1);
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "matrix-cell";
+            button.dataset.bits = bits.join("");
+            button.setAttribute("role", "radio");
+            button.setAttribute("aria-label", `Apply this mix: ${bitLabel(bits)}. Low axes become 2 and high axes become 4.`);
+            button.setAttribute("aria-checked", "false");
+            button.tabIndex = -1;
+            button.innerHTML = `<svg viewBox="0 0 64 64" aria-hidden="true">${glyphMarkup(binaryAxes(bits), index)}</svg>`;
+            const previewCell = () => writeMatrixLabel(bits, "Cell preview");
+            const restoreLabel = () => writeMatrixLabel(quantizedBits(getState()));
+            button.addEventListener("mouseenter", previewCell);
+            button.addEventListener("focus", previewCell);
+            button.addEventListener("mouseleave", restoreLabel);
+            button.addEventListener("blur", restoreLabel);
+            button.addEventListener("click", () => {
+              axisNames.forEach((name, axisIndex) => {
+                form.elements.namedItem(name).value = bits[axisIndex] ? "4" : "2";
+              });
+              update();
+            });
+            button.addEventListener("keydown", (event) => {
+              const controls = [...matrix.querySelectorAll(".matrix-cell")];
+              const current = controls.indexOf(button);
+              let row = Math.floor(current / 8);
+              let column = current % 8;
+              if (event.key === "ArrowLeft") column = (column + 7) % 8;
+              else if (event.key === "ArrowRight") column = (column + 1) % 8;
+              else if (event.key === "ArrowUp") row = (row + 7) % 8;
+              else if (event.key === "ArrowDown") row = (row + 1) % 8;
+              else if (event.key === "Home") column = 0;
+              else if (event.key === "End") column = 7;
+              else return;
+              event.preventDefault();
+              const next = controls[row * 8 + column];
+              next.click();
+              next.focus();
+            });
+            matrix.appendChild(button);
+          }
+        }
+
+        const selectedBits = quantizedBits(state);
+        const selectedKey = selectedBits.join("");
+        matrix.querySelectorAll(".matrix-cell").forEach((button) => {
+          const selected = button.dataset.bits === selectedKey;
+          button.setAttribute("aria-checked", String(selected));
+          button.tabIndex = selected ? 0 : -1;
+        });
+        writeMatrixLabel(selectedBits);
+      }
+
+      function slug(value) {
+        return (value || "icon-brief")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "icon-brief";
+      }
+
+      function notify(message) {
+        clearTimeout(toastTimer);
+        toast.textContent = message;
+        toastTimer = setTimeout(() => { toast.textContent = ""; }, 2800);
+      }
+
+      function saveState(state) {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(state));
+        } catch (_) {
+          if (!storageWarningShown) {
+            storageWarningShown = true;
+            notify("Browser storage is unavailable. Save the brief before closing.");
+          }
+        }
+      }
+
+      function update() {
+        const state = getState();
+        promptOutput.value = buildPrompt(state);
+        const filled = [state.project, state.purpose, state.audience, state.territories,
+          state.styles.length, state.smallest]
+          .filter(Boolean).length;
+        completion.textContent = `${filled}/6 brief signals set`;
+        styleCount.textContent = String(state.styles.length);
+        document.querySelectorAll("input[type=range]").forEach((range) => {
+          const output = range.parentElement.querySelector("output");
+          const word = axisWords[range.name][Number(range.value) - 1];
+          range.setAttribute("aria-valuetext", word);
+          if (output) output.value = `${range.value} · ${word}`;
+        });
+        renderCharacterLab(state);
+        saveState(state);
+      }
+
+      function setChecked(name, values) {
+        const selected = new Set(Array.isArray(values) ? values : []);
+        form.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+          input.checked = selected.has(input.value);
+        });
+      }
+
+      function validateStatePayload(state) {
+        if (!state || typeof state !== "object" || Array.isArray(state)) {
+          throw new Error("The brief must be a JSON object.");
+        }
+        if (state.schema !== "kalebtec.icon-brief.v1") {
+          throw new Error("Unsupported brief schema.");
+        }
+        const textFields = ["target", "project", "iconClass", "purpose", "audience", "territories", "avoid",
+          "smallest", "backgrounds", "palette", "deliveryNotes"];
+        textFields.forEach((name) => {
+          if (state[name] !== undefined && typeof state[name] !== "string") {
+            throw new Error(`Brief field ${name} must be text.`);
+          }
+        });
+        ["target", "iconClass", "smallest"].forEach((name) => {
+          if (state[name] === undefined) return;
+          const element = form.elements.namedItem(name);
+          if (![...element.options].some((option) => option.value === state[name])) {
+            throw new Error(`Brief field ${name} has an unsupported value.`);
+          }
+        });
+        if (state.axes !== undefined) {
+          if (!state.axes || typeof state.axes !== "object" || Array.isArray(state.axes)) {
+            throw new Error("Brief axes must be an object.");
+          }
+          axisNames.forEach((name) => {
+            if (state.axes[name] !== undefined &&
+                (!Number.isInteger(state.axes[name]) || state.axes[name] < 1 || state.axes[name] > 5)) {
+              throw new Error(`Character axis ${name} must be an integer from 1 to 5.`);
+            }
+          });
+        }
+        if (state.styles !== undefined) {
+          if (!Array.isArray(state.styles) || state.styles.length > 3) {
+            throw new Error("A brief can include up to three style references.");
+          }
+          const knownStyles = new Set([...form.querySelectorAll('input[name="styles"]')].map((input) => input.value));
+          if (state.styles.some((style) => typeof style !== "string" || !knownStyles.has(style))) {
+            throw new Error("The brief contains an unsupported style reference.");
+          }
+        }
+        return state;
+      }
+
+      function applyState(state) {
+        validateStatePayload(state);
+        const fields = ["target", "project", "iconClass", "purpose", "audience", "territories", "avoid",
+          "smallest", "backgrounds", "palette", "deliveryNotes"];
+        fields.forEach((name) => {
+          const element = form.elements.namedItem(name);
+          if (element && state[name] !== undefined) element.value = state[name];
+        });
+        Object.keys(axisWords).forEach((name) => {
+          const element = form.elements.namedItem(name);
+          if (element && state.axes && state.axes[name] !== undefined) element.value = state.axes[name];
+        });
+        setChecked("styles", state.styles || []);
+        update();
+      }
+
+      function showStep(index, scroll = true, moveFocus = true) {
+        activeStep = Math.max(0, Math.min(panels.length - 1, index));
+        panels.forEach((panel, panelIndex) => { panel.hidden = panelIndex !== activeStep; });
+        stepButtons.forEach((button, buttonIndex) => {
+          if (buttonIndex === activeStep) button.setAttribute("aria-current", "step");
+          else button.removeAttribute("aria-current");
+        });
+        if (scroll) {
+          document.querySelector(".panel").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        if (moveFocus) {
+          const heading = panels[activeStep].querySelector("h2");
+          heading.setAttribute("tabindex", "-1");
+          heading.focus({ preventScroll: true });
+        }
+      }
+
+      function validateCurrentStep() {
+        const required = [...panels[activeStep].querySelectorAll("[required]")];
+        for (const input of required) {
+          if (!input.checkValidity()) {
+            input.reportValidity();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function validateForExport() {
+        if (form.checkValidity()) return true;
+        const invalid = form.querySelector(":invalid");
+        const targetPanel = panels.indexOf(invalid.closest(".step"));
+        if (targetPanel >= 0) showStep(targetPanel);
+        invalid.reportValidity();
+        notify("Complete the required fields before exporting.");
+        return false;
+      }
+
+      async function copyPrompt() {
+        if (!validateForExport()) return;
+        const text = promptOutput.value;
+        let copied = false;
+        try {
+          await navigator.clipboard.writeText(text);
+          copied = true;
+        } catch (_) {
+          promptOutput.focus();
+          promptOutput.select();
+          copied = document.execCommand("copy");
+          window.getSelection()?.removeAllRanges();
+        }
+        notify(copied ? "Discovery prompt copied." : "Copy failed. Select the prompt and copy it manually.");
+      }
+
+      function download(filename, content, type) {
+        const url = URL.createObjectURL(new Blob([content], { type }));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      form.addEventListener("input", (event) => {
+        if (event.target.name === "styles" && checkedValues("styles").length > 3) {
+          event.target.checked = false;
+          notify("Choose up to three style references.");
+        }
+        update();
+      });
+      form.addEventListener("change", update);
+      document.getElementById("target").addEventListener("change", update);
+
+      document.querySelectorAll("[data-next]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (validateCurrentStep()) showStep(activeStep + 1);
+        });
+      });
+      document.querySelectorAll("[data-back]").forEach((button) => {
+        button.addEventListener("click", () => showStep(activeStep - 1));
+      });
+      stepButtons.forEach((button) => {
+        button.addEventListener("click", () => showStep(Number(button.dataset.stepTarget)));
+      });
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.addEventListener("click", copyPrompt);
+      });
+      document.querySelectorAll("[data-reset]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (!window.confirm("Reset every brief choice?")) return;
+          localStorage.removeItem(storageKey);
+          form.reset();
+          update();
+          showStep(0);
+          notify("Brief reset.");
+        });
+      });
+
+      document.getElementById("download-text").addEventListener("click", () => {
+        if (!validateForExport()) return;
+        const state = getState();
+        download(`${slug(state.project)}-icon-brief.txt`, buildPrompt(state) + "\n", "text/plain;charset=utf-8");
+        notify("Text brief saved.");
+      });
+      document.getElementById("download-json").addEventListener("click", () => {
+        if (!validateForExport()) return;
+        const state = getState();
+        download(`${slug(state.project)}-icon-brief.json`, JSON.stringify(state, null, 2) + "\n", "application/json");
+        notify("JSON brief saved.");
+      });
+      document.getElementById("import-json").addEventListener("click", () => {
+        document.getElementById("import-file").click();
+      });
+      document.getElementById("import-file").addEventListener("change", async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        try {
+          const state = JSON.parse(await file.text());
+          applyState(state);
+          notify("Brief imported.");
+        } catch (error) {
+          notify(error.message || "Could not import this file.");
+        } finally {
+          event.target.value = "";
+        }
+      });
+
+      try {
+        const savedText = localStorage.getItem(storageKey);
+        if (savedText) applyState(JSON.parse(savedText));
+        else update();
+      } catch (_) {
+        try { localStorage.removeItem(storageKey); } catch (_) { /* Storage may be unavailable. */ }
+        update();
+      }
+      showStep(0, false, false);
+
+      window.__ICON_BRIEF_BUILDER__ = { getState, buildPrompt, applyState, showStep };
+    })();
+  </script>
+</body>
+</html>

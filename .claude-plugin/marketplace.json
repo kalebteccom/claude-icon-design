@@ -3,12 +3,12 @@
   "owner": {
     "name": "Kalebtec"
   },
-  "description": "A focused icon-design plugin for Claude Code.",
+  "description": "A guided three-stage icon-design plugin for Claude Code.",
   "plugins": [
     {
       "name": "icon-design",
       "source": "./plugins/icon-design",
-      "description": "Design, refine, validate, and package production-ready icons and compact brand marks.",
+      "description": "Discover, refine, validate, and package production-ready icons and compact brand marks.",
       "category": "design",
       "tags": [
         "icons",

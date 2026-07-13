@@ -1,12 +1,13 @@
 # Icon Design for Claude Code and Codex
 
-Icon Design is a vector-first workflow for icons, favicons, app icons, and
-compact brand marks. It covers the design brief, concept directions, geometric
-construction, optical correction, native-size checks, and production export.
+Icon Design turns a loose idea into a finished icon through three deliberate
+stages: discovery, refinement, and final delivery. It keeps exploration broad at
+the start, makes every option easy to reference by number, and waits for a choice
+before polishing or exporting anything.
 
-The same skill runs in Claude Code and Codex. It can start a mark from scratch,
-refine an existing SVG, audit an icon family, or turn a finished mark into a
-reproducible brand asset suite.
+The same skill runs in Claude Code and Codex. It can also audit an icon family,
+clean up an existing SVG, or take an approved mark straight to a reproducible
+brand asset suite.
 
 ## Install in Codex
 
@@ -17,15 +18,11 @@ codex plugin marketplace add kalebteccom/claude-icon-design
 codex plugin add icon-design@kalebtec-icon-design
 ```
 
-Start a new Codex conversation after installation. Call the skill directly:
+Start a new Codex conversation after installation, then use `$icon-design`:
 
 ```text
-Use $icon-design to design a compact product mark for a privacy-first analytics
-tool. It must remain clear at 16 px and work on light and dark backgrounds.
+Use $icon-design to open the guided brief builder.
 ```
-
-Codex can also select the skill from a normal request that mentions icon design,
-SVG refinement, favicons, app icons, or a brand-suite export.
 
 ## Install in Claude Code
 
@@ -34,51 +31,105 @@ claude plugin marketplace add kalebteccom/claude-icon-design
 claude plugin install icon-design@kalebtec-icon-design
 ```
 
-Restart Claude Code or run `/reload-plugins`, then call:
+Restart Claude Code or run `/reload-plugins`, then use:
 
 ```text
 /icon-design:icon-design
 ```
 
-You can put the brief in the same message or describe the job normally and let
-Claude Code select the skill.
+Both runtimes also select the skill from an ordinary request about icon design,
+concept exploration, SVG refinement, favicons, app icons, or a brand-suite
+export.
 
-## Write a useful brief
+## Start with the guided brief
 
-A short brief is enough when it covers four things:
+Ask the skill to open the brief builder when you want help choosing a direction.
+It walks through purpose, style references, and six character axes. A live
+solid-glyph specimen and a 64-cell matrix show how those axes affect form before
+they become prompt text. Matrix cells show the binary poles; selecting one sets
+the six sliders to 2 or 4, leaving room to tune the live 1–5 specimen. The style
+specimens are original reference shapes, not logos to imitate.
 
-- what the product, company, or action does;
-- the feeling the icon should carry;
-- where it will appear and the smallest required size;
-- any existing colors, shapes, or neighboring icons it must fit with.
+The complete asset package is the default. Small-size, background, palette, and
+extra handoff constraints sit under an optional `Customize delivery` section
+instead of taking up a separate step.
 
-For example:
+The builder produces a compact discovery prompt that can be:
+
+- copied directly into Codex, Claude Code, or another chatbot;
+- saved as a plain-text brief;
+- saved as JSON and imported again later;
+- adjusted without sending unfinished choices to a chat.
+
+It is a single local file with no server, account, or network request. From a
+repository clone, open it with:
+
+```sh
+python3 plugins/icon-design/skills/icon-design/scripts/launch_brief_builder.py
+```
+
+## The three stages
+
+### 1. Discovery
+
+Discovery creates 20 genuinely different representations by default. Each one
+gets an ID from `D1-01` to `D1-20`, its own monochrome SVG, a short concept note,
+and a place on a standard comparison sheet. The sheet shows every direction at
+large size, in reverse, and at native size.
+
+The skill stops after the sheet. Continue with a precise instruction:
 
 ```text
-Design a geometric mark for a file-transfer tool. It should feel quick and
-dependable without using a generic lightning bolt. Deliver a monochrome SVG,
-favicons, app icons, and a circular social avatar.
+Refine D1-07.
 ```
 
 ```text
-Use $icon-design to turn assets/mark.svg into a complete icon suite. Keep the
-mark itself monochrome, use the palette in brand/colors.json, and verify the
-favicon at 16, 24, and 32 px.
+Continue discovery from D1-07 and D1-12, but make the next round quieter and
+more geometric.
 ```
 
 ```text
-Audit the icons in ui/icons for metaphor clarity, optical balance, stroke
-consistency, and pixel alignment at 16, 20, and 24 px. Fix the SVGs and include
-a before-and-after comparison sheet.
+Change the brief: avoid enclosed badges and explore a more open silhouette.
 ```
 
-`$icon-design` is the Codex form. In Claude Code, use
-`/icon-design:icon-design` or leave the prefix off and write the request in
-plain language.
+Further discovery uses `D2-*`, `D3-*`, and so on, so a selection never becomes
+ambiguous.
+
+### 2. Refinement
+
+Refinement starts from one selected discovery ID and produces eight variants by
+default. It preserves the idea while testing proportion, topology, counter
+shape, stroke or fill, corners, and optical balance. The variants use IDs such
+as `R1-01` through `R1-08` and appear on the same standard sheet.
+
+The skill stops again. You can finalize one, refine it further, or return to
+discovery:
+
+```text
+Finalize R1-04.
+```
+
+```text
+Refine R1-04 further with a larger counter and less visual weight on the lower
+right.
+```
+
+### 3. Final
+
+Final delivery starts only after a numbered choice. The chosen mark is corrected
+optically, checked on its required backgrounds and native sizes, and packaged as
+a reproducible asset suite.
+
+If you already have an approved SVG, you can skip discovery and refinement:
+
+```text
+Use $icon-design to clean up assets/mark.svg and prepare the final suite. Keep
+the master monochrome and verify it at 16, 20, 24, and 32 px.
+```
 
 ## What a full export contains
 
-The export is a zip with:
+The final zip includes:
 
 - a canonical `currentColor` SVG and fixed dark and light variants;
 - SVG, PNG, ICO, and Apple touch favicon assets;
@@ -88,24 +139,30 @@ The export is a zip with:
 - the design spec and renderer needed to rebuild every derived asset;
 - a concise README and an explicit asset license.
 
-The renderer uses CairoSVG and Pillow. The source mark stays vector and
-monochrome; color and material treatments belong to the derived tiles.
+Discovery and refinement files stay in the working project and do not clutter
+the production zip.
 
 ## Requirements
 
 - Codex with plugin support, or Claude Code 2.1.143 or newer;
-- Python 3.9 or newer for asset rendering;
+- Python 3.9 or newer for sheet and asset rendering;
 - CairoSVG 2.7 or newer and Pillow 10 or newer.
 
-The agent installs the Python packages in a project-local environment when they
-are not already available.
+On Apple Silicon Macs, a Homebrew Cairo install may need its library path made
+explicit when running either renderer:
+
+```sh
+DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib python3 path/to/render_script.py
+```
 
 ## Method
 
-The working method combines brand discovery, geometric construction, optical
-correction, pixel-grid checks, accessibility, and production handoff. The full
-design notes and reading list are in
+The workflow combines brand discovery, geometric construction, optical
+correction, pixel-grid checks, accessibility, and production handoff. The
+detailed design notes and reading list are in
 [`design-method.md`](plugins/icon-design/skills/icon-design/references/design-method.md).
+The round structure and file contract are in
+[`three-stage-workflow.md`](plugins/icon-design/skills/icon-design/references/three-stage-workflow.md).
 
 ## Development
 
@@ -116,8 +173,7 @@ claude plugin validate plugins/icon-design --strict
 claude plugin validate . --strict
 ```
 
-Validate the Codex manifest with the plugin-creator validator included with
-Codex:
+Validate the Codex manifest:
 
 ```sh
 uv run --with pyyaml python \
@@ -125,7 +181,7 @@ uv run --with pyyaml python \
   plugins/icon-design
 ```
 
-Run the renderer tests:
+Run all renderer and workflow tests:
 
 ```sh
 uv run --with cairosvg --with pillow python -m unittest discover -s tests -v

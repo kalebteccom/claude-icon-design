@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0 - 2026-07-13
+
+- Added an optional local brief builder with style references, design axes,
+  compact prompt output, and text and JSON export.
+- Added a live character specimen and 64-state permutation matrix, with complete
+  final delivery as the default and optional constraints kept out of the main
+  flow.
+- Added explicit discovery, refinement, and final stages with stable concept
+  IDs and stop-and-select handoffs.
+- Added deterministic numbered concept-sheet rendering for 20-direction
+  discovery rounds and selected-concept refinement rounds.
+- Tightened canonical SVG paint checks and zip-to-suite parity validation.
+- Added workflow tests and Codex skill metadata.
+
 ## 1.1.0 - 2026-07-13
 
 - Added Codex plugin and marketplace manifests alongside the Claude Code

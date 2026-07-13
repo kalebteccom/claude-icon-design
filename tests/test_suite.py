@@ -3,6 +3,7 @@ import shutil
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -61,6 +62,44 @@ class SuiteTests(unittest.TestCase):
             source = self.write_source(Path(temporary), mark)
             with self.assertRaisesRegex(ValueError, "Visible fill values"):
                 render_suite.render(source, Path(temporary) / "suite", None)
+
+    def test_rejects_default_black_geometry(self):
+        mark = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="16" y="16" width="64" height="64"/>
+  <circle cx="48" cy="48" r="12" fill="currentColor"/>
+</svg>
+"""
+        with tempfile.TemporaryDirectory() as temporary:
+            source = self.write_source(Path(temporary), mark)
+            with self.assertRaisesRegex(ValueError, "paint must resolve"):
+                render_suite.render(source, Path(temporary) / "suite", None)
+
+    def test_rejects_style_element(self):
+        mark = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <style>rect { fill: currentColor; }</style>
+  <rect x="16" y="16" width="64" height="64"/>
+</svg>
+"""
+        with tempfile.TemporaryDirectory() as temporary:
+            source = self.write_source(Path(temporary), mark)
+            with self.assertRaisesRegex(ValueError, "Disallowed SVG element: <style>"):
+                render_suite.render(source, Path(temporary) / "suite", None)
+
+    def test_rejects_stale_zip_member(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = self.write_source(root)
+            output = root / "suite"
+            archive = root / "test-mark-brand-suite.zip"
+            render_suite.render(source, output, archive)
+            with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as zipped:
+                for path in sorted(output.rglob("*")):
+                    if path.is_file():
+                        relative = path.relative_to(output).as_posix()
+                        content = b"stale\n" if relative == "LICENSE" else path.read_bytes()
+                        zipped.writestr(relative, content)
+            with self.assertRaisesRegex(ValueError, "Zip member differs"):
+                validate_suite.validate_suite(output, archive)
 
 
 if __name__ == "__main__":

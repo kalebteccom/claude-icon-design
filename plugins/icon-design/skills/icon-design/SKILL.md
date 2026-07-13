@@ -1,139 +1,137 @@
 ---
 name: icon-design
-description: Design, refine, audit, or package original icons and compact brand marks. Use for product and app icons, favicons, UI icon families, monograms, SVG cleanup, small-size optical correction, icon-system rules, export preparation, and reproducible brand-suite delivery.
+description: Design, discover, refine, audit, or package original icons and compact brand marks. Use for guided icon briefs and moodboards, 20-direction concept discovery, numbered icon sheets, selected-concept refinement, product and app icons, favicons, UI icon families, monograms, SVG cleanup, small-size optical correction, export preparation, and reproducible brand-suite delivery.
 ---
 
 # Icon design
 
-Create original, vector-first icons that communicate quickly and still hold up
-at their smallest production size. Treat the mark, its small-size variants, and
-the export suite as one system.
+Run new icon work as three explicit stages: discovery, refinement, and final.
+Keep the optional guided brief outside those stages. Stop after each visual
+sheet so the user can steer by concept ID.
 
-## Load the right guidance
+## Resolve bundled resources
 
-- Resolve bundled files relative to this `SKILL.md`, not the user's working
-  directory. In the commands below, `<skill-directory>` means the absolute
-  directory containing this file. Claude Code may resolve it from
-  `${CLAUDE_PLUGIN_ROOT}/skills/icon-design`; Codex should use the installed
-  skill path supplied with the skill.
-- Read [references/design-method.md](references/design-method.md) before
-  designing, refining, or auditing a mark.
-- Read [references/delivery-contract.md](references/delivery-contract.md) when
-  the request includes production exports, a handoff, or a zip.
-- Start from
-  [assets/design-spec.example.json](assets/design-spec.example.json) when using
-  the bundled renderer.
+Resolve bundled files relative to this `SKILL.md`, not the user's working
+directory. In the commands below, `<skill-directory>` means the absolute
+directory containing this file. Claude Code may resolve it from
+`${CLAUDE_PLUGIN_ROOT}/skills/icon-design`; Codex should use the installed skill
+path supplied with the skill.
 
-## Work in this order
+- Read [references/three-stage-workflow.md](references/three-stage-workflow.md)
+  for every new discovery or refinement project.
+- Read [references/design-method.md](references/design-method.md) before drawing,
+  refining, or auditing a mark.
+- Read [references/delivery-contract.md](references/delivery-contract.md) for a
+  final production handoff or zip.
+- Start concept rounds from
+  [assets/concept-sheet.example.json](assets/concept-sheet.example.json) and a
+  final suite from
+  [assets/design-spec.example.json](assets/design-spec.example.json).
 
-### 1. Frame the job
+## Route the request
 
-Identify the icon class before drawing:
+- For a guided start, moodboard, or thin brief, open the local brief builder:
 
-- Brand mark: recognition and ownership matter most.
-- App or product icon: platform context and tile behavior matter most.
-- System icon: follow the platform's established metaphor when one exists.
-- Workflow icon: task recognition and consistency with its family matter most.
+  ```sh
+  python3 "<skill-directory>/scripts/launch_brief_builder.py"
+  ```
 
-Capture the audience, intended feeling, required metaphor, usage contexts,
-smallest size, backgrounds, palette constraints, neighboring icons, and output
-formats. If the brief is thin, state sensible assumptions and move forward. Ask
-one focused question only when the missing answer would change the concept
-substantially.
+  Ask the user to paste its compact export back into the chat. Treat that export
+  as the brief and do not ask for the same information again.
+- For a new mark with enough context, begin at discovery.
+- For `Refine <ID>`, find that concept and begin or continue refinement.
+- For `Finalize <ID>`, promote that concept to the final stage.
+- For an existing SVG that only needs cleanup or exports, skip directly to the
+  requested audit or final handoff.
 
-### 2. Find the concept before the geometry
+## Stage 1: discovery
 
-Translate the brief into a short chain:
+Generate 20 genuinely different representations by default. Use distinct
+metaphors, silhouettes, construction logic, negative space, and rhythm; do not
+pass off styling variations as separate ideas. Save square monochrome
+`currentColor` SVGs with IDs `D1-01` through `D1-20` and write `concepts.json`.
 
-`brand or task -> useful metaphor -> basic shapes -> distinctive move`
+Render the standard sheet:
 
-Explore at least three genuinely different directions for a new mark. Describe
-the story, silhouette, and likely small-size risk of each. Do not present tiny
-variations of one idea as separate concepts.
+```sh
+python3 "<skill-directory>/scripts/render_concept_sheet.py" \
+  path/to/discovery/d1/concepts.json \
+  --output path/to/discovery/d1/discovery-d1.png
+```
 
-Check obvious competitors and symbol conventions when web access is available.
-Use that research to avoid collisions, not to trace or remix another mark. Do
-not claim trademark clearance.
+Open and inspect the sheet. Deliver it with a compact territory summary, then
+stop. Let the user select an ID, request another discovery round, combine useful
+properties, or change the brief. Continued discovery uses `D2-*`, normally with
+another 20 directions.
 
-### 3. Build the vector master
+## Stage 2: refinement
 
-Use a square coordinate system with a deliberate safe area. Prefer simple
-primitives, repeated dimensions, and the fewest practical anchor points. Define
-stroke weight, corner language, cap and join style, diagonal treatment, and
-badge space before expanding the family.
+Take one numbered discovery concept and generate eight variants by default.
+Hold the core idea steady while varying proportion, topology, counter shape,
+stroke or fill strategy, corner language, and optical balance. Save `R1-01`
+through `R1-08`, record the chosen parent in `concepts.json`, and render the same
+standard sheet.
 
-Keep the canonical mark monochrome with `currentColor`. Keep gradients,
-materials, shadows, and platform tiles in derived assets. Avoid embedded
-bitmaps, external references, scripts, text objects, masks that can be expressed
-as paths, and decorative filters in the master SVG.
+Show large, reverse, and native-size views. Explain only the meaningful
+differences, then stop for a numbered choice. Continued refinement uses `R2-*`
+and preserves its selected parent.
 
-Make optical corrections when strict centering or equal dimensions look wrong.
-Record the reason in the design notes; do not hide arbitrary nudges behind a
-claim of mathematical perfection.
+## Stage 3: final
 
-### 4. Design at native size
+Start only from an explicit user choice. Build a simple canonical vector master,
+apply optical corrections, inspect all requested native sizes and backgrounds,
+and prepare the production suite. Keep the master monochrome with
+`currentColor`; apply color, depth, and materials only to derived contexts.
 
-Inspect the icon at every required native size, especially 16, 20, 24, 32, and
-48 px. Use a nearest-neighbor enlargement only to inspect the raster decisions;
-judge the actual icon at 100%.
-
-At small sizes:
-
-- snap critical edges and centers to the pixel grid;
-- remove details that collapse into noise;
-- preserve counters and negative space;
-- adjust curved or diagonal weight optically;
-- create a dedicated small-size variant when scaling the master is not enough.
-
-Test light, dark, muted, selected, and disabled contexts when they apply. Pair
-ambiguous workflow icons with text. Supply an accessible name for meaningful UI
-icons and hide purely decorative icons from assistive technology.
-
-### 5. Compare, refine, and audit
-
-Review the work as a set, not only as isolated artboards. Check metaphor,
-silhouette, proportions, visual center, stroke and corner consistency, spacing,
-contrast, pixel fit, and similarity to existing marks.
-
-Do not approve an export from source inspection alone. Render previews and look
-at them. Iterate until the large construction, native-size favicon, app tile,
-and circular avatar crop all read correctly.
-
-### 6. Build the production suite
-
-Create a source directory containing `design.json` and a square `mark.svg`.
-The master must use `currentColor` for every visible fill or stroke.
-
-Run the renderer with an environment that has CairoSVG and Pillow:
+Create a source directory with `design.json` and a square `mark.svg`, then run:
 
 ```sh
 python3 "<skill-directory>/scripts/render_suite.py" \
-  --source path/to/source \
-  --output path/to/brand-suite
+  --source path/to/final/source \
+  --output path/to/final/brand-suite
+
+python3 "<skill-directory>/scripts/validate_suite.py" \
+  path/to/final/brand-suite \
+  --zip path/to/final/<slug>-brand-suite.zip
 ```
 
-If the dependencies are unavailable, create a project-local virtual environment
-outside the deliverable directory and install:
+If rendering dependencies are missing, create a project-local environment
+outside the deliverable and install:
 
 ```sh
 python3 -m pip install -r \
   "<skill-directory>/scripts/requirements.txt"
 ```
 
-Validate both the directory and zip:
+On Apple Silicon with Homebrew, if CairoSVG cannot find Cairo, rerun the
+renderer with `DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib`.
 
-```sh
-python3 "<skill-directory>/scripts/validate_suite.py" \
-  path/to/brand-suite \
-  --zip path/to/brand-suite.zip
-```
+## Drawing and review rules
 
-Never write generated work into the plugin root. It is a versioned installation
-cache. Put source, iterations, and final assets in the user's project.
+- Translate the brief through
+  `brand or task -> useful metaphor -> basic shapes -> distinctive move`.
+- Check obvious competitors and conventions when web access is available. Use
+  research to avoid collisions, never to trace or remix another mark. Do not
+  claim trademark clearance.
+- Prefer a square coordinate system, deliberate safe area, simple primitives,
+  repeated dimensions, and few anchor points.
+- Avoid embedded bitmaps, external references, scripts, text objects, and
+  decorative filters in the master SVG.
+- Judge the actual icon at 16, 20, 24, 32, and 48 px when relevant. Preserve
+  counters, snap critical edges, and make dedicated small-size variants when
+  simple scaling fails.
+- Test light, dark, muted, selected, circular, and app-tile contexts as needed.
+  Pair ambiguous workflow icons with text and provide accessible names for
+  meaningful UI icons.
+- Render and look at every comparison sheet. Source inspection alone is not a
+  visual check.
 
 ## Handoff
 
-Deliver the final zip, the uncompressed suite when useful, and a compact summary
-of the concept, optical corrections, smallest verified size, and any remaining
-limits. Keep process notes factual. Do not add tool attribution or invented
-testimonials to the asset package.
+Keep the working brief and all discovery and refinement rounds in the project,
+but keep them out of the production zip. Deliver the final zip, the uncompressed
+suite when useful, the chosen concept ID, smallest verified size, optical
+corrections, and remaining limits. Keep notes factual and omit tool attribution
+or invented testimonials.
+
+Never write generated work into the plugin root; it is an installation cache.
