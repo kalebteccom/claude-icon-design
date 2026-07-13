@@ -1,0 +1,20 @@
+{
+  "name": "kalebtec-icon-design",
+  "interface": {
+    "displayName": "Kalebtec Icon Design"
+  },
+  "plugins": [
+    {
+      "name": "icon-design",
+      "source": {
+        "source": "local",
+        "path": "./plugins/icon-design"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Design"
+    }
+  ]
+}

@@ -11,6 +11,11 @@ the export suite as one system.
 
 ## Load the right guidance
 
+- Resolve bundled files relative to this `SKILL.md`, not the user's working
+  directory. In the commands below, `<skill-directory>` means the absolute
+  directory containing this file. Claude Code may resolve it from
+  `${CLAUDE_PLUGIN_ROOT}/skills/icon-design`; Codex should use the installed
+  skill path supplied with the skill.
 - Read [references/design-method.md](references/design-method.md) before
   designing, refining, or auditing a mark.
 - Read [references/delivery-contract.md](references/delivery-contract.md) when
@@ -102,7 +107,7 @@ The master must use `currentColor` for every visible fill or stroke.
 Run the renderer with an environment that has CairoSVG and Pillow:
 
 ```sh
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/icon-design/scripts/render_suite.py" \
+python3 "<skill-directory>/scripts/render_suite.py" \
   --source path/to/source \
   --output path/to/brand-suite
 ```
@@ -112,20 +117,19 @@ outside the deliverable directory and install:
 
 ```sh
 python3 -m pip install -r \
-  "${CLAUDE_PLUGIN_ROOT}/skills/icon-design/scripts/requirements.txt"
+  "<skill-directory>/scripts/requirements.txt"
 ```
 
 Validate both the directory and zip:
 
 ```sh
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/icon-design/scripts/validate_suite.py" \
+python3 "<skill-directory>/scripts/validate_suite.py" \
   path/to/brand-suite \
   --zip path/to/brand-suite.zip
 ```
 
-Never write generated work into `${CLAUDE_PLUGIN_ROOT}`. It is a versioned
-installation cache. Put source, iterations, and final assets in the user's
-project.
+Never write generated work into the plugin root. It is a versioned installation
+cache. Put source, iterations, and final assets in the user's project.
 
 ## Handoff
 

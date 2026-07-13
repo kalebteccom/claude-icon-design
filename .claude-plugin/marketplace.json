@@ -3,7 +3,7 @@
   "owner": {
     "name": "Kalebtec"
   },
-  "description": "A focused Claude Code plugin for original icon and brand-mark design.",
+  "description": "A focused icon-design plugin for Claude Code.",
   "plugins": [
     {
       "name": "icon-design",

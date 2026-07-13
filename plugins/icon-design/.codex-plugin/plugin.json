@@ -1,0 +1,36 @@
+{
+  "name": "icon-design",
+  "version": "1.1.0+codex.20260713180207",
+  "description": "Design, refine, validate, and package production-ready icons and compact brand marks.",
+  "author": {
+    "name": "Kalebtec",
+    "url": "https://github.com/kalebteccom"
+  },
+  "homepage": "https://github.com/kalebteccom/claude-icon-design",
+  "repository": "https://github.com/kalebteccom/claude-icon-design",
+  "license": "MIT",
+  "keywords": [
+    "icons",
+    "svg",
+    "favicons",
+    "app-icons",
+    "branding"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Icon Design",
+    "shortDescription": "Design and package production-ready icons.",
+    "longDescription": "A vector-first workflow for designing, auditing, refining, and exporting icons, favicons, app icons, and compact brand marks.",
+    "developerName": "Kalebtec",
+    "category": "Design",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/kalebteccom/claude-icon-design",
+    "defaultPrompt": [
+      "Design an original icon and verify it at native sizes.",
+      "Refine this SVG and package a complete brand suite.",
+      "Audit this icon family for clarity and consistency."
+    ]
+  }
+}
