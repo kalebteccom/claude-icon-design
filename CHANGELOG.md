@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.0 - 2026-07-13
+
+- Rebuilt the brief builder as a standalone Solid app with a single-file static
+  production build shared by the plugin.
+- Added Guided character presets with reference-style pairings and kept the six
+  axes and 64-cell matrix in a separate Custom mode.
+- Made matrix cells render the exact 2/4 values they apply to the live specimen.
+- Reworked the step counter, onboarding, responsive layout, and how-it-works
+  explanation.
+- Added deterministic character and prompt tests for the web app.
+
 ## 1.2.0 - 2026-07-13
 
 - Added an optional local brief builder with style references, design axes,

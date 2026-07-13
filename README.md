@@ -44,11 +44,11 @@ export.
 ## Start with the guided brief
 
 Ask the skill to open the brief builder when you want help choosing a direction.
-It walks through purpose, style references, and six character axes. A live
-solid-glyph specimen and a 64-cell matrix show how those axes affect form before
-they become prompt text. Matrix cells show the binary poles; selecting one sets
-the six sliders to 2 or 4, leaving room to tune the live 1–5 specimen. The style
-specimens are original reference shapes, not logos to imitate.
+It walks through purpose, style references, and character. Guided mode offers
+six ready-made character presets with useful style pairings. Custom mode exposes
+the six axes and a 64-cell matrix. Every matrix cell uses the same 2/4 values it
+applies to the live specimen, so its preview and selected result match exactly.
+The style specimens are original reference shapes, not logos to imitate.
 
 The complete asset package is the default. Small-size, background, palette, and
 extra handoff constraints sit under an optional `Customize delivery` section
@@ -66,6 +66,31 @@ repository clone, open it with:
 
 ```sh
 python3 plugins/icon-design/skills/icon-design/scripts/launch_brief_builder.py
+```
+
+## Run the standalone web app
+
+The brief builder is a Solid app at the repository root. It builds to one static
+HTML file, so it can run on a file URL, GitHub Pages, or any static host without
+a server or API.
+
+```sh
+npm install
+npm run dev
+```
+
+Create the production site build in `dist/`:
+
+```sh
+npm run build
+npm run preview
+```
+
+The plugin bundles the same app rather than maintaining a separate copy. After
+changing the web app, rebuild and sync that single-file bundle with:
+
+```sh
+npm run build:plugin
 ```
 
 ## The three stages
@@ -146,7 +171,8 @@ the production zip.
 
 - Codex with plugin support, or Claude Code 2.1.143 or newer;
 - Python 3.9 or newer for sheet and asset rendering;
-- CairoSVG 2.7 or newer and Pillow 10 or newer.
+- CairoSVG 2.7 or newer and Pillow 10 or newer;
+- Node 20.19+ on the 20.x line, or Node 22.12+, for web development.
 
 On Apple Silicon Macs, a Homebrew Cairo install may need its library path made
 explicit when running either renderer:
@@ -185,6 +211,12 @@ Run all renderer and workflow tests:
 
 ```sh
 uv run --with cairosvg --with pillow python -m unittest discover -s tests -v
+```
+
+Run the web tests, production build, and plugin bundle sync:
+
+```sh
+npm run check
 ```
 
 ## License

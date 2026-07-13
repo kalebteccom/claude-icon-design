@@ -36,8 +36,9 @@ path supplied with the skill.
   python3 "<skill-directory>/scripts/launch_brief_builder.py"
   ```
 
-  Ask the user to paste its compact export back into the chat. Treat that export
-  as the brief and do not ask for the same information again.
+  The builder offers Guided character presets and Custom axis controls. Ask the
+  user to paste its compact export back into the chat. Treat that export as the
+  brief and do not ask for the same information again.
 - For a new mark with enough context, begin at discovery.
 - For `Refine <ID>`, find that concept and begin or continue refinement.
 - For `Finalize <ID>`, promote that concept to the final stage.
