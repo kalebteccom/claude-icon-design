@@ -150,6 +150,10 @@ without asking anyone to interpret style adjectives blindly.
 The complete package is the default. Smaller delivery choices live under
 `Customize delivery` and stay out of the main flow.
 
+The interface starts from the operating-system theme and offers a persistent
+light/dark control in the header. Both palettes use the standalone Kalebtec
+mark and are checked for text, focus, and control-boundary contrast.
+
 The builder can copy a prompt, save text, save JSON, and import a prior brief.
 It has no account, server, or upload step; unfinished work remains in the
 browser.
@@ -255,6 +259,9 @@ Run the browser-side tests, production build, and bundled-builder sync:
 ```sh
 npm run check
 ```
+
+`npm run check` includes rendered axe checks for each interactive stage,
+explicit light/dark contrast checks, and the static SEO/asset validation.
 
 ## Method and license
 

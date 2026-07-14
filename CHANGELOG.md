@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.5.0 - 2026-07-14
+
+- Replaced the framed app icon with the standalone Kalebtec mark across the
+  site, README, favicon set, and install assets.
+- Added persistent light and dark themes with system preference support and
+  adaptive browser chrome.
+- Improved keyboard navigation, focus handling, control labels, contrast,
+  forced-colors support, reduced-motion behavior, and dialog semantics.
+- Added automated accessibility checks with axe, theme contrast tests, and
+  broader coverage for metadata and install assets.
+- Expanded search and social metadata while keeping canonical, sitemap,
+  robots, manifest, and agent-readable guidance in sync.
+
 ## 1.4.0 - 2026-07-14
 
 - Added a v2 round manifest with explicit territories, refinement modes,

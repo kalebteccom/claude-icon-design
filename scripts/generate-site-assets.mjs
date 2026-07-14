@@ -4,11 +4,9 @@ import sharp from "sharp";
 
 const cardSource = resolve("assets/og-card.svg");
 const faviconSource = resolve(".github/icon-design-mark.svg");
-const appIconSource = resolve("assets/kalebtec-app-icon.svg");
 const publicDirectory = resolve("public");
 const card = await readFile(cardSource);
 const favicon = await readFile(faviconSource);
-const appIcon = await readFile(appIconSource);
 
 await mkdir(publicDirectory, { recursive: true });
 
@@ -56,10 +54,9 @@ await writeFile(
 
 for (const [filename, size] of [
   ["icon-192.png", 192],
-  ["icon-512.png", 512],
-  ["icon-maskable-512.png", 512]
+  ["icon-512.png", 512]
 ]) {
-  await sharp(appIcon, { density: 192 })
+  await sharp(favicon, { density: 384 })
     .resize(size, size, { fit: "fill" })
     .png({ compressionLevel: 9 })
     .toFile(resolve(publicDirectory, filename));

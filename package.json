@@ -1,6 +1,6 @@
 {
   "name": "kalebtec-icon-brief",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,13 +12,16 @@
     "build:plugin": "npm run build && node scripts/sync-plugin-builder.mjs",
     "render:characters": "vite-node --config scripts/vite-character-sheet.config.ts scripts/render-character-sheet.tsx",
     "test:web": "vitest run",
+    "test:a11y": "node scripts/check-accessibility.mjs",
     "test:seo": "node scripts/check-site-assets.mjs",
-    "check": "npm run test:web && npm run test:seo && npm run build:plugin"
+    "check": "npm run test:web && npm run test:a11y && npm run test:seo && npm run build:plugin"
   },
   "dependencies": {
     "solid-js": "1.9.14"
   },
   "devDependencies": {
+    "axe-core": "4.12.1",
+    "jsdom": "26.1.0",
     "sharp": "0.35.3",
     "typescript": "7.0.2",
     "vite": "8.1.4",

@@ -1,4 +1,4 @@
-import { For, createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { For, createEffect, createMemo, createSignal, onCleanup, onMount } from "solid-js";
 import { CharacterConfigurator } from "./components/CharacterConfigurator";
 import { Glyph } from "./components/Glyph";
 import { HowItWorks } from "./components/HowItWorks";
@@ -6,6 +6,7 @@ import { KalebtecMark } from "./components/KalebtecMark";
 import { ProcessShowcase } from "./components/ProcessShowcase";
 import { STYLE_OPTIONS, StyleSpecimen, type StyleId } from "./components/StyleSpecimen";
 import { Stepper } from "./components/Stepper";
+import { ThemeToggle } from "./components/ThemeToggle";
 import type { CharacterPreset } from "./data/presets";
 import {
   ICON_CLASSES,
@@ -26,6 +27,7 @@ import {
   type Target
 } from "./lib/brief";
 import { characterName, type CharacterAxes } from "./lib/character";
+import { THEME_STORAGE_KEY, oppositeTheme, resolveTheme, themeColor, type Theme } from "./lib/theme";
 
 const TARGET_LABELS: Record<Target, string> = {
   codex: "Codex",
@@ -34,7 +36,17 @@ const TARGET_LABELS: Record<Target, string> = {
 };
 
 function App() {
+  const savedTheme = (() => {
+    try {
+      return localStorage.getItem(THEME_STORAGE_KEY) ?? document.documentElement.dataset.theme;
+    } catch {
+      return document.documentElement.dataset.theme;
+    }
+  })();
+  let followsSystemTheme = savedTheme !== "light" && savedTheme !== "dark";
+  const prefersDark = typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [state, setState] = createSignal<BriefState>(createDefaultBrief());
+  const [theme, setTheme] = createSignal<Theme>(resolveTheme(savedTheme, prefersDark));
   const [activeStep, setActiveStep] = createSignal(0);
   const [toast, setToast] = createSignal("");
   const [ready, setReady] = createSignal(false);
@@ -57,7 +69,30 @@ function App() {
     setState((current) => ({ ...current, ...patch }));
   };
 
+  const applyTheme = (value: Theme, persist: boolean) => {
+    setTheme(value);
+    document.documentElement.dataset.theme = value;
+    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
+      meta.content = themeColor(value);
+    });
+    if (!persist) return;
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, value);
+    } catch {
+      // Theme switching still works when browser storage is disabled.
+    }
+  };
+
   onMount(() => {
+    applyTheme(theme(), false);
+    if (typeof window.matchMedia === "function") {
+      const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      const syncSystemTheme = (event: MediaQueryListEvent) => {
+        if (followsSystemTheme) applyTheme(event.matches ? "dark" : "light", false);
+      };
+      colorScheme.addEventListener?.("change", syncSystemTheme);
+      onCleanup(() => colorScheme.removeEventListener?.("change", syncSystemTheme));
+    }
     for (const key of [STORAGE_KEY, LEGACY_STORAGE_KEY]) {
       try {
         const saved = localStorage.getItem(key);
@@ -220,19 +255,26 @@ function App() {
     else howDialog?.setAttribute("open", "");
   };
 
+  const toggleTheme = () => {
+    followsSystemTheme = false;
+    applyTheme(oppositeTheme(theme()), true);
+  };
+
   return (
     <div class="app-shell">
+      <a class="skip-link" href="#main-content">Skip to main content</a>
       <header class="site-header">
         <a class="brand" href="https://kalebtec.com" aria-label="Kalebtec home">
           <span class="brand-mark" aria-hidden="true"><KalebtecMark /></span><span>Kalebtec</span>
         </a>
-        <nav class="header-actions" aria-label="Page links">
+        <div class="header-actions">
           <a href="https://github.com/kalebteccom/claude-icon-design">GitHub</a>
+          <ThemeToggle theme={theme()} onToggle={toggleTheme} />
           <button type="button" class="button subtle" onClick={openHow}>How it works</button>
-        </nav>
+        </div>
       </header>
 
-      <main>
+      <main id="main-content" tabIndex="-1">
         <section class="hero">
           <p class="eyebrow">Icon brief builder</p>
           <h1>Make the brief as intentional as the icon.</h1>
@@ -241,7 +283,7 @@ function App() {
         </section>
 
         <div class="workspace">
-          <form class="builder-panel" onSubmit={(event) => event.preventDefault()}>
+          <form class="builder-panel" aria-label="Icon brief builder" onSubmit={(event) => event.preventDefault()}>
             <Stepper current={activeStep()} onSelect={selectStep} />
 
             <section data-step-panel="0" class="step-panel" hidden={activeStep() !== 0}>
@@ -286,7 +328,7 @@ function App() {
                     )}
                   </For>
                 </div>
-                <p class="selection-count">{state().styles.length}/3 selected</p>
+                <p class="selection-count" aria-live="polite">{state().styles.length}/3 selected</p>
               </fieldset>
               <div class="step-actions"><button type="button" class="button" onClick={() => showStep(0)}>Back</button><button type="button" class="button primary" onClick={nextStep}>Set character</button></div>
             </section>
@@ -328,7 +370,7 @@ function App() {
             </div>
             <h2 id="output-title">Discovery prompt</h2>
             <label class="field compact"><span>Paste into</span><select value={state().target} onChange={(event) => patchState({ target: event.currentTarget.value as Target })}><For each={TARGETS}>{(target) => <option value={target}>{TARGET_LABELS[target]}</option>}</For></select></label>
-            <p class="target-note">Codex and Claude Code targets expect the <a href="https://github.com/kalebteccom/claude-icon-design#install-in-codex">Icon Design plugin</a>. “Another chatbot” creates a standalone prompt.</p>
+            <p class="target-note">Codex and Claude Code targets expect the <a href="https://github.com/kalebteccom/claude-icon-design#codex">Icon Design plugin</a>. “Another chatbot” creates a standalone prompt.</p>
             <textarea ref={promptOutput} class="prompt-output" readOnly spellcheck={false} aria-label="Generated discovery prompt" value={prompt()} />
             <div class="export-actions">
               <button type="button" class="button primary" onClick={copyPrompt}>Copy prompt</button>

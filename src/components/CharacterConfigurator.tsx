@@ -151,10 +151,10 @@ export function CharacterConfigurator(props: CharacterConfiguratorProps) {
           <div class="matrix-section">
             <div class="matrix-heading">
               <div><span class="kicker">Reference map</span><h3>64 lower/higher landmarks</h3></div>
-              <p>Rows combine complexity, geometry, and energy. Columns combine playfulness, density, and novelty.</p>
+              <p id="matrix-instructions">Rows combine complexity, geometry, and energy. Columns combine playfulness, density, and novelty.</p>
             </div>
             <div class="matrix-scroll">
-              <div class="character-matrix" role="radiogroup" aria-label="Character permutation landmarks" aria-describedby="matrix-status">
+              <div class="character-matrix" role="radiogroup" aria-label="Character permutation landmarks" aria-describedby="matrix-instructions matrix-status">
                 <For each={PERMUTATIONS}>
                   {(permutation) => (
                     <label

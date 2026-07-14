@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
     <meta name="theme-color" content="#f1f0e4" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#080f11" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="Turn an icon idea into a precise brief, then discover, refine, and export it with any capable design assistant." />
@@ -13,7 +14,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Kalebtec Icon Brief" />
@@ -41,6 +42,19 @@
     <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("kalebtec.icon-brief.theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.dataset.theme = savedTheme;
+          document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+            meta.content = savedTheme === "dark" ? "#080f11" : "#f1f0e4";
+          });
+        }
+      } catch {
+        // The system theme still applies when browser storage is unavailable.
+      }
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -50,6 +64,7 @@
         "url": "https://icons.kalebtec.com/",
         "description": "Turn an icon idea into a precise brief, then discover, refine, and export it with any capable design assistant.",
         "applicationCategory": "DesignApplication",
+        "inLanguage": "en",
         "operatingSystem": "Any modern browser",
         "browserRequirements": "Requires JavaScript and a modern web browser.",
         "isAccessibleForFree": true,
@@ -79,8 +94,8 @@
   <body>
     <div id="root"></div>
     <noscript>
-      <main style="max-width: 760px; margin: 0 auto; padding: 64px 24px; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #080f11;">
-        <p style="color: #8000ff; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;">Kalebtec Icon Brief</p>
+      <main style="max-width: 760px; margin: 0 auto; padding: 64px 24px; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink, #080f11);">
+        <p style="color: var(--accent, #8000ff); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;">Kalebtec Icon Brief</p>
         <h1 style="font-size: clamp(42px, 8vw, 76px); line-height: .98; letter-spacing: -.055em;">Make the brief as intentional as the icon.</h1>
         <p style="font-size: 18px; line-height: 1.6;">Build a precise visual brief, explore twenty numbered directions, refine a chosen parent, and prepare a complete production package.</p>
         <p>This interactive builder needs JavaScript. The same workflow is available through the <a href="https://github.com/kalebteccom/claude-icon-design">Icon Design plugin for Codex and Claude Code</a>.</p>

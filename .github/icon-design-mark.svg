@@ -1,20 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
   <title id="title">Kalebtec logo</title>
-  <desc id="desc">The Kalebtec mark in its dark icon tile.</desc>
+  <desc id="desc">The standalone Kalebtec mark.</desc>
   <metadata>Copyright © 2026 Kalebtec. All rights reserved. This mark is not licensed under the repository MIT License.</metadata>
-  <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#080F11"/>
-      <stop offset="1" stop-color="#151B20"/>
-    </linearGradient>
-    <radialGradient id="accent" cx=".78" cy=".14" r=".82">
-      <stop offset="0" stop-color="#8000FF" stop-opacity=".36"/>
-      <stop offset="1" stop-color="#8000FF" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="96" height="96" rx="21.12" fill="url(#tile)"/>
-  <rect width="96" height="96" rx="21.12" fill="url(#accent)"/>
-  <g transform="translate(7.68 7.68) scale(.84)">
-    <path d="M14 14H36V82H14V14ZM60 14H82V32L56 48L82 64V82H60L42 55V41L60 14Z" fill="#F1F0E4"/>
-  </g>
+  <style>
+    .mark { fill: #080F11; }
+    @media (prefers-color-scheme: dark) { .mark { fill: #F1F0E4; } }
+  </style>
+  <path class="mark" d="M14 14H36V82H14V14ZM60 14H82V32L56 48L82 64V82H60L42 55V41L60 14Z"/>
 </svg>
