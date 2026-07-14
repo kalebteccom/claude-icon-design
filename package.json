@@ -5,17 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:assets": "node scripts/generate-site-assets.mjs",
+    "generate:og": "npm run generate:assets",
+    "prebuild": "npm run generate:assets",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "build:plugin": "npm run build && node scripts/sync-plugin-builder.mjs",
     "render:characters": "vite-node --config scripts/vite-character-sheet.config.ts scripts/render-character-sheet.tsx",
     "test:web": "vitest run",
-    "check": "npm run test:web && npm run build:plugin"
+    "test:seo": "node scripts/check-site-assets.mjs",
+    "check": "npm run test:web && npm run test:seo && npm run build:plugin"
   },
   "dependencies": {
     "solid-js": "1.9.14"
   },
   "devDependencies": {
+    "sharp": "0.35.3",
     "typescript": "7.0.2",
     "vite": "8.1.4",
     "vite-plugin-singlefile": "2.3.3",

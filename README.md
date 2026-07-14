@@ -196,6 +196,18 @@ Build the static site and sync the same single-file builder into the plugin:
 npm run build:plugin
 ```
 
+The social preview is generated from [`assets/og-card.svg`](assets/og-card.svg).
+After changing the artwork or site icon, regenerate the Open Graph card,
+favicons, touch icon, and install icons with:
+
+```sh
+npm run generate:assets
+```
+
+The canonical metadata, structured data, manifest, crawler rules, and sitemap
+are kept in `index.html` and `public/` so they remain available before the app
+loads.
+
 Netlify reads its build and response headers from `netlify.toml`. The linked
 production site can be deployed with:
 

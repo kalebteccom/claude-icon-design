@@ -1,0 +1,34 @@
+{
+  "id": "/",
+  "name": "Kalebtec Icon Brief",
+  "short_name": "Icon Brief",
+  "description": "Build a precise icon brief, then move through numbered discovery, refinement, and final delivery.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f1f0e4",
+  "theme_color": "#080f11",
+  "categories": ["design", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

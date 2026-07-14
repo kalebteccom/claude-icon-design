@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Kalebtec logo © 2026 Kalebtec. All rights reserved. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Kalebtec logo">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#080F11"/>
+      <stop offset="1" stop-color="#151B20"/>
+    </linearGradient>
+    <radialGradient id="accent" cx=".78" cy=".14" r=".82">
+      <stop offset="0" stop-color="#8000FF" stop-opacity=".36"/>
+      <stop offset="1" stop-color="#8000FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#tile)"/>
+  <rect width="1024" height="1024" fill="url(#accent)"/>
+  <g transform="translate(92.16 92.16) scale(8.7466667)">
+    <path d="M14 14H36V82H14V14ZM60 14H82V32L56 48L82 64V82H60L42 55V41L60 14Z" fill="#F1F0E4"/>
+  </g>
+</svg>
