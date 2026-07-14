@@ -204,6 +204,9 @@ favicons, touch icon, and install icons with:
 npm run generate:assets
 ```
 
+Generated assets are committed and deployed as-is. Regeneration stays explicit
+because the card deliberately uses the same native system type as the site.
+
 The canonical metadata, structured data, manifest, crawler rules, and sitemap
 are kept in `index.html` and `public/` so they remain available before the app
 loads.

@@ -7,7 +7,6 @@
     "dev": "vite",
     "generate:assets": "node scripts/generate-site-assets.mjs",
     "generate:og": "npm run generate:assets",
-    "prebuild": "npm run generate:assets",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "build:plugin": "npm run build && node scripts/sync-plugin-builder.mjs",
