@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { oppositeTheme, resolveTheme, themeColor } from "./theme";
+import { normalizeThemePreference, resolveTheme, themeColor } from "./theme";
 
 describe("site theme", () => {
   it("keeps an explicit saved theme", () => {
@@ -12,9 +12,11 @@ describe("site theme", () => {
     expect(resolveTheme("unexpected", false)).toBe("light");
   });
 
-  it("switches between the two supported themes", () => {
-    expect(oppositeTheme("light")).toBe("dark");
-    expect(oppositeTheme("dark")).toBe("light");
+  it("normalizes missing and unsupported preferences to system", () => {
+    expect(normalizeThemePreference("light")).toBe("light");
+    expect(normalizeThemePreference("dark")).toBe("dark");
+    expect(normalizeThemePreference("system")).toBe("system");
+    expect(normalizeThemePreference(null)).toBe("system");
   });
 
   it("uses the page colors for browser chrome", () => {

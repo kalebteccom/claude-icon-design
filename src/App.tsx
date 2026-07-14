@@ -6,7 +6,7 @@ import { KalebtecMark } from "./components/KalebtecMark";
 import { ProcessShowcase } from "./components/ProcessShowcase";
 import { STYLE_OPTIONS, StyleSpecimen, type StyleId } from "./components/StyleSpecimen";
 import { Stepper } from "./components/Stepper";
-import { ThemeToggle } from "./components/ThemeToggle";
+import { ThemeSelector } from "./components/ThemeSelector";
 import type { CharacterPreset } from "./data/presets";
 import {
   ICON_CLASSES,
@@ -27,7 +27,14 @@ import {
   type Target
 } from "./lib/brief";
 import { characterName, type CharacterAxes } from "./lib/character";
-import { THEME_STORAGE_KEY, oppositeTheme, resolveTheme, themeColor, type Theme } from "./lib/theme";
+import {
+  THEME_STORAGE_KEY,
+  normalizeThemePreference,
+  resolveTheme,
+  themeColor,
+  type Theme,
+  type ThemePreference
+} from "./lib/theme";
 
 const TARGET_LABELS: Record<Target, string> = {
   codex: "Codex",
@@ -43,10 +50,12 @@ function App() {
       return document.documentElement.dataset.theme;
     }
   })();
-  let followsSystemTheme = savedTheme !== "light" && savedTheme !== "dark";
+  const initialThemePreference = normalizeThemePreference(savedTheme);
   const prefersDark = typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  let systemPrefersDark = prefersDark;
   const [state, setState] = createSignal<BriefState>(createDefaultBrief());
-  const [theme, setTheme] = createSignal<Theme>(resolveTheme(savedTheme, prefersDark));
+  const [themePreference, setThemePreference] = createSignal<ThemePreference>(initialThemePreference);
+  const [theme, setTheme] = createSignal<Theme>(resolveTheme(initialThemePreference, prefersDark));
   const [activeStep, setActiveStep] = createSignal(0);
   const [toast, setToast] = createSignal("");
   const [ready, setReady] = createSignal(false);
@@ -69,26 +78,32 @@ function App() {
     setState((current) => ({ ...current, ...patch }));
   };
 
-  const applyTheme = (value: Theme, persist: boolean) => {
+  const applyTheme = (value: Theme) => {
     setTheme(value);
     document.documentElement.dataset.theme = value;
     document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
       meta.content = themeColor(value);
     });
-    if (!persist) return;
+  };
+
+  const chooseThemePreference = (preference: ThemePreference) => {
+    setThemePreference(preference);
+    applyTheme(resolveTheme(preference, systemPrefersDark));
     try {
-      localStorage.setItem(THEME_STORAGE_KEY, value);
+      if (preference === "system") localStorage.removeItem(THEME_STORAGE_KEY);
+      else localStorage.setItem(THEME_STORAGE_KEY, preference);
     } catch {
       // Theme switching still works when browser storage is disabled.
     }
   };
 
   onMount(() => {
-    applyTheme(theme(), false);
+    applyTheme(theme());
     if (typeof window.matchMedia === "function") {
       const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
       const syncSystemTheme = (event: MediaQueryListEvent) => {
-        if (followsSystemTheme) applyTheme(event.matches ? "dark" : "light", false);
+        systemPrefersDark = event.matches;
+        if (themePreference() === "system") applyTheme(event.matches ? "dark" : "light");
       };
       colorScheme.addEventListener?.("change", syncSystemTheme);
       onCleanup(() => colorScheme.removeEventListener?.("change", syncSystemTheme));
@@ -255,11 +270,6 @@ function App() {
     else howDialog?.setAttribute("open", "");
   };
 
-  const toggleTheme = () => {
-    followsSystemTheme = false;
-    applyTheme(oppositeTheme(theme()), true);
-  };
-
   return (
     <div class="app-shell">
       <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -269,7 +279,7 @@ function App() {
         </a>
         <div class="header-actions">
           <a href="https://github.com/kalebteccom/claude-icon-design">GitHub</a>
-          <ThemeToggle theme={theme()} onToggle={toggleTheme} />
+          <ThemeSelector preference={themePreference()} onChange={chooseThemePreference} />
           <button type="button" class="button subtle" onClick={openHow}>How it works</button>
         </div>
       </header>

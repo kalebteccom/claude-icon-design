@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1 - 2026-07-14
+
+- Replaced the binary theme toggle with a System, Light, and Dark selector.
+- Made the selected preference visible, kept explicit choices persistent, and
+  restored live operating-system tracking when System is selected.
+
 ## 1.5.0 - 2026-07-14
 
 - Replaced the framed app icon with the standalone Kalebtec mark across the

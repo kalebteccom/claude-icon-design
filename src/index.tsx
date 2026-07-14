@@ -18,5 +18,5 @@ declare global {
 
 window.__ICON_BRIEF_BUILDER__ = {
   schema: "kalebtec.icon-brief.v1",
-  version: "1.5.0"
+  version: "1.5.1"
 };

@@ -80,24 +80,51 @@ describe("rendered accessibility", () => {
     await expectNoViolations();
   });
 
-  it("exposes and persists the theme control state", () => {
-    const toggle = document.querySelector<HTMLButtonElement>(".theme-toggle")!;
-    expect(toggle.getAttribute("aria-pressed")).toBe("false");
-    toggle.click();
+  it("shows and persists an explicit theme preference", () => {
+    const selector = document.querySelector<HTMLSelectElement>(".theme-selector select")!;
+    expect(selector.value).toBe("system");
+
+    selector.value = "dark";
+    selector.dispatchEvent(new Event("change", { bubbles: true }));
     expect(document.documentElement.dataset.theme).toBe("dark");
-    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    expect(selector.value).toBe("dark");
     expect(localStorage.getItem("kalebtec.icon-brief.theme")).toBe("dark");
+
+    selector.value = "light";
+    selector.dispatchEvent(new Event("change", { bubbles: true }));
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(selector.value).toBe("light");
+    expect(localStorage.getItem("kalebtec.icon-brief.theme")).toBe("light");
+
+    dispose?.();
+    document.documentElement.removeAttribute("data-theme");
+    document.body.innerHTML = '<div id="root"></div>';
+    dispose = render(() => <App />, document.getElementById("root")!);
+    const restoredSelector = document.querySelector<HTMLSelectElement>(".theme-selector select")!;
+    expect(restoredSelector.value).toBe("light");
+    expect(document.documentElement.dataset.theme).toBe("light");
   });
 
-  it("follows system changes until a theme is chosen", () => {
-    const toggle = document.querySelector<HTMLButtonElement>(".theme-toggle")!;
+  it("can return to system and follows later system changes", () => {
+    const selector = document.querySelector<HTMLSelectElement>(".theme-selector select")!;
     setSystemPreference(true);
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(selector.value).toBe("system");
+    expect(localStorage.getItem("kalebtec.icon-brief.theme")).toBeNull();
+
+    selector.value = "light";
+    selector.dispatchEvent(new Event("change", { bubbles: true }));
+    expect(document.documentElement.dataset.theme).toBe("light");
+    setSystemPreference(true);
+    expect(document.documentElement.dataset.theme).toBe("light");
+
+    selector.value = "system";
+    selector.dispatchEvent(new Event("change", { bubbles: true }));
+    expect(selector.value).toBe("system");
     expect(document.documentElement.dataset.theme).toBe("dark");
     expect(localStorage.getItem("kalebtec.icon-brief.theme")).toBeNull();
 
-    toggle.click();
-    expect(document.documentElement.dataset.theme).toBe("light");
-    setSystemPreference(true);
+    setSystemPreference(false);
     expect(document.documentElement.dataset.theme).toBe("light");
   });
 });

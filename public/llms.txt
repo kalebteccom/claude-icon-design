@@ -5,7 +5,7 @@ and refinement rounds, then a validated production package. Use the visual
 builder at https://icons.kalebtec.com/ or follow this file in any capable agent
 UI or terminal UI.
 
-Version: 1.5.0
+Version: 1.5.1
 Updated: 2026-07-14
 Repository: https://github.com/kalebteccom/claude-icon-design
 License: MIT for plugin and website code. Generated assets use the license
