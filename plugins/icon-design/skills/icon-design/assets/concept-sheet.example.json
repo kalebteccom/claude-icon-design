@@ -1,8 +1,16 @@
 {
+  "schema": "kalebtec.icon-round.v2",
   "project": "Project name",
+  "wordmark": "Project name",
   "stage": "discovery",
   "round": 1,
+  "mode": "territory",
   "count": 20,
-  "selected_parent": null,
+  "subtitle": "Five territories, four distinct constructions in each.",
+  "references": [],
+  "retired": [],
+  "review": {
+    "selection_max": 5
+  },
   "concepts": []
 }

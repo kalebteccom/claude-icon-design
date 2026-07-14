@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.4.0 - 2026-07-14
+
+- Added a v2 round manifest with explicit territories, refinement modes,
+  multi-parent lineage, visible controls and benchmarks, retired IDs, and
+  reviewer-attributed ratings.
+- Made every concept round render a matching fixed PNG and self-contained HTML
+  review page with ordered selections and compact continuation requests.
+- Standardized discovery as five territories with four distinct constructions
+  each, while keeping open discovery available when the brief needs it.
+- Added controlled, exploratory, shortlist, and optical refinement modes, and
+  kept parent concepts eligible as final choices.
+- Reworked the public site around the final Kalebtec logo and added a
+  visual discovery-to-final walkthrough.
+- Added a branded README hero, new manifest examples, expanded agent guidance,
+  and renderer coverage for multi-parent rounds, fresh IDs, and attributed
+  ratings.
+- Added an explicit all-rights-reserved notice for the Kalebtec name, logo, and
+  mark, separate from the MIT-licensed code.
+
 ## 1.3.1 - 2026-07-14
 
 - Added the production Netlify build configuration and public-site metadata.

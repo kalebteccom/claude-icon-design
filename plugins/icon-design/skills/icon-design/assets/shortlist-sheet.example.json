@@ -1,0 +1,38 @@
+{
+  "schema": "kalebtec.icon-round.v2",
+  "project": "Project name",
+  "wordmark": "Project name",
+  "stage": "refinement",
+  "round": 1,
+  "mode": "shortlist",
+  "count": 12,
+  "subtitle": "Three selected parents, four deliberate moves from each.",
+  "references": [
+    {
+      "id": "D1-07",
+      "title": "First selected parent",
+      "file": "../../discovery/d1/D1-07.svg",
+      "role": "parent",
+      "note": "Keep unchanged, selectable, and grouped with its variants."
+    },
+    {
+      "id": "D1-12",
+      "title": "Second selected parent",
+      "file": "../../discovery/d1/D1-12.svg",
+      "role": "parent",
+      "note": "Keep unchanged, selectable, and grouped with its variants."
+    },
+    {
+      "id": "D1-18",
+      "title": "Third selected parent",
+      "file": "../../discovery/d1/D1-18.svg",
+      "role": "parent",
+      "note": "Keep unchanged, selectable, and grouped with its variants."
+    }
+  ],
+  "retired": [],
+  "review": {
+    "selection_max": 3
+  },
+  "concepts": []
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Kalebtec logo</title>
+  <desc id="desc">Two vertical rails joined by an angular engineering junction.</desc>
+  <metadata>Copyright © 2026 Kalebtec. All rights reserved. This mark is not licensed under the repository MIT License.</metadata>
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="16%" r="78%">
+      <stop offset="0" stop-color="#8000FF" stop-opacity=".9"/>
+      <stop offset=".48" stop-color="#151B20" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#080F11" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="4" y="4" width="152" height="152" rx="36" fill="#080F11"/>
+  <rect x="4" y="4" width="152" height="152" rx="36" fill="url(#glow)"/>
+  <path d="M34 34H64V126H34V34ZM96 34H126V58L91 80L126 102V126H96L72 89V71L96 34Z" fill="#F1F0E4"/>
+</svg>

@@ -1,7 +1,7 @@
 {
   "name": "icon-design",
-  "version": "1.3.1+codex.20260714095742",
-  "description": "Discover, refine, validate, and package production-ready icons and compact brand marks.",
+  "version": "1.4.0+codex.20260714111058",
+  "description": "Discover, compare, refine, and package production-ready icons and compact brand marks.",
   "author": {
     "name": "Kalebtec",
     "url": "https://github.com/kalebteccom"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Icon Design",
-    "shortDescription": "Explore, refine, and export original icons.",
-    "longDescription": "A guided workflow for building an icon brief, exploring numbered directions, refining a selected concept, and exporting production assets.",
+    "shortDescription": "Explore, compare, refine, and export original icons.",
+    "longDescription": "A guided workflow for building an icon brief, reviewing numbered PNG and HTML sheets, refining selected parents, and exporting production assets.",
     "developerName": "Kalebtec",
     "category": "Design",
     "capabilities": [

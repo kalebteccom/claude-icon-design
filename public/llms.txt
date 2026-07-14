@@ -1,20 +1,27 @@
 # Kalebtec Icon Design
 
-> A self-contained agent guide for turning an icon brief into numbered discovery sheets, selected-concept refinements, and a validated production asset package. Use the visual builder at https://icons.kalebtec.com/ or run the same workflow through Codex, Claude Code, or another capable TUI/AUI.
+Self-contained instructions for turning an icon brief into numbered discovery
+and refinement rounds, then a validated production package. Use the visual
+builder at https://icons.kalebtec.com/ or follow this file in any capable agent
+UI or terminal UI.
 
-Version: 1.3.1
+Version: 1.4.0
 Updated: 2026-07-14
 Repository: https://github.com/kalebteccom/claude-icon-design
-License: MIT for the plugin code. Generated brand assets use the license selected for that project.
+License: MIT for plugin and website code. Generated assets use the license
+selected for the project. The Kalebtec name, logo, and mark are the exclusive
+property of Kalebtec, copyright © 2026 Kalebtec, all rights reserved, and are
+not licensed under MIT.
 
-## Fastest route for an agent UI or terminal UI
+## Fastest route
 
 Choose the first available route:
 
-1. Codex with the plugin installed: invoke `$icon-design`.
-2. Claude Code with the plugin installed: invoke `/icon-design:icon-design`.
-3. Any other agent: open https://icons.kalebtec.com/, complete the three brief steps, choose “Another chatbot,” copy the discovery prompt, and paste it into the current conversation.
-4. A repository-aware agent can follow this file directly without the plugin.
+1. Codex: invoke `$icon-design`.
+2. Claude Code: invoke `/icon-design:icon-design`.
+3. Any other agent: open https://icons.kalebtec.com/, finish the three brief
+   steps, choose “Another chatbot,” and paste the exported prompt into the chat.
+4. A repository-aware agent can follow this file directly.
 
 Recommended opening requests:
 
@@ -27,9 +34,10 @@ Use $icon-design to open the guided brief builder for a new icon project.
 Open the guided brief builder for a new icon project.
 ```
 
-If the user already supplied a clear brief, skip the builder and begin discovery. If the user pastes a builder export, treat it as the agreed brief and do not ask for the same information again.
+If the user supplied a complete brief, begin discovery. If the user pasted a
+builder export, treat it as the agreed brief and do not repeat its questions.
 
-## Runtime installation
+## Install
 
 Codex:
 
@@ -38,7 +46,7 @@ codex plugin marketplace add kalebteccom/claude-icon-design
 codex plugin add icon-design@kalebtec-icon-design
 ```
 
-Start a new Codex conversation after installation.
+Start a new conversation after installation.
 
 Claude Code:
 
@@ -49,45 +57,62 @@ claude plugin install icon-design@kalebtec-icon-design
 
 Restart Claude Code or run `/reload-plugins` after installation.
 
-## Resolve the bundled skill directory
+## Resolve bundled files
 
-In the commands below, `<skill-directory>` is the absolute directory containing `SKILL.md`.
+`<skill-directory>` below is the absolute directory containing `SKILL.md`.
 
-- Codex: use the installed skill path provided by Codex.
-- Claude Code: use `${CLAUDE_PLUGIN_ROOT}/skills/icon-design`.
-- Repository checkout: use `plugins/icon-design/skills/icon-design`.
+- Codex: use the installed path supplied with the skill.
+- Claude Code: `${CLAUDE_PLUGIN_ROOT}/skills/icon-design`.
+- Repository checkout: `plugins/icon-design/skills/icon-design`.
 
-Never write project output into an installed plugin or skill directory. It may be an installation cache. Create or use a separate working project directory.
+Read these bundled files when they apply:
+
+- `references/three-stage-workflow.md` for new discovery and refinement work.
+- `references/round-manifest.md` before writing `concepts.json`.
+- `references/design-method.md` before drawing, refining, or auditing.
+- `references/delivery-contract.md` before final delivery.
+- `assets/concept-sheet.example.json` for discovery.
+- `assets/refinement-sheet.example.json` for refinement.
+- `assets/shortlist-sheet.example.json` for multi-parent refinement.
+- `assets/design-spec.example.json` for the final suite.
+
+Never write project work into an installed skill directory. It may be an
+installation cache.
 
 ## Optional guided brief
 
-Web route:
+Web:
 
 ```text
 https://icons.kalebtec.com/
 ```
 
-Bundled local route:
+Bundled local file:
 
 ```sh
 python3 "<skill-directory>/scripts/launch_brief_builder.py"
 ```
 
-Print the local file URL without opening it:
+Print its file URL without opening it:
 
 ```sh
 python3 "<skill-directory>/scripts/launch_brief_builder.py" --print-url
 ```
 
-The builder has three brief steps:
+The builder has three preparation steps:
 
-1. Purpose: project, icon class, job, audience, metaphor territory, and things to avoid.
+1. Purpose: project, icon class, job, audience, metaphor territories, and
+   things to avoid.
 2. References: up to three original visual-language specimens.
-3. Character: a Guided preset or six Custom 1–5 axes with a 64-landmark reference matrix.
+3. Character: a Guided preset or six Custom 1–5 axes with a 64-cell reference
+   matrix.
 
-The builder always requests 20 discovery directions and a complete final package. Optional size, background, palette, and handoff constraints are under “Customize delivery.” It stores the unfinished brief locally in the browser and can export text or JSON.
+It always asks for 20 discovery ideas and the complete final package. Optional
+size, background, palette, and handoff constraints stay under “Customize
+delivery.” It can copy a prompt, save text, save JSON, and import JSON. No brief
+is uploaded.
 
-## Core production rule
+## Production rule
 
 Run new work in exactly three production stages:
 
@@ -95,21 +120,49 @@ Run new work in exactly three production stages:
 2. Refinement.
 3. Final.
 
-The guided brief is preparation, not a fourth production stage. Stop after each discovery or refinement sheet. Do not silently choose a concept for the user.
+The guided brief is preparation, not a fourth stage. Stop after every discovery
+or refinement handoff. Never choose a winner for the user.
 
-## Project layout
+## Rendering setup
+
+Prepare the renderer before the first discovery sheet:
+
+```sh
+python3 -m pip install -r "<skill-directory>/scripts/requirements.txt"
+```
+
+Or run it in an isolated environment:
+
+```sh
+uv run --with cairosvg --with pillow python \
+  "<skill-directory>/scripts/render_concept_sheet.py" \
+  path/to/concepts.json \
+  --output path/to/review.png
+```
+
+On Apple Silicon with Homebrew, if CairoSVG cannot find Cairo, prefix the
+command with `DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib`.
+
+## Working project
 
 ```text
 icon-project/
   brief.json
   discovery/
-    d1/concepts.json
-    d1/D1-01.svg ... D1-20.svg
-    d1/discovery-d1.png
+    d1/
+      concepts.json
+      D1-01.svg ... D1-20.svg
+      discovery-d1.png
+      discovery-d1.html
   refinement/
-    r1/concepts.json
-    r1/R1-01.svg ... R1-08.svg
-    r1/refinement-r1.png
+    r1/
+      concepts.json
+      R1-01.svg ... R1-08.svg
+      refinement-r1.png
+      refinement-r1.html
+  archive/
+    rejected-round/concepts.json
+    rejected-round/*.svg
   final/
     source/design.json
     source/mark.svg
@@ -117,34 +170,50 @@ icon-project/
     <slug>-brand-suite.zip
 ```
 
-Use `D<round>-<two-digit number>` for discovery and `R<round>-<two-digit number>` for refinement. Never recycle an ID within a project.
+Use `D<round>-<two-digit number>` for discovery and
+`R<round>-<two-digit number>` for refinement. Never recycle an ID. Archive
+rejected source SVGs and manifests; generated review pages can be reproduced.
 
 ## Stage 1: discovery
 
-Generate 20 genuinely different representations by default. Change the metaphor, silhouette, construction logic, negative-space move, and rhythm. Small styling changes to one drawing do not count as separate concepts.
+Generate 20 genuinely different representations by default. Normally use five
+useful territories with four structurally different constructions in each.
+Change metaphor, silhouette, construction, negative space, and visual rhythm.
+Styling changes alone do not count as separate concepts.
 
-Create one square monochrome `currentColor` SVG per concept and a `concepts.json` manifest:
+Create one square monochrome `currentColor` SVG per concept. Use schema
+`kalebtec.icon-round.v2`:
 
 ```json
 {
-  "project": "Project name",
+  "schema": "kalebtec.icon-round.v2",
+  "project": "Northstar",
+  "wordmark": "Northstar",
   "stage": "discovery",
   "round": 1,
+  "mode": "territory",
   "count": 20,
-  "selected_parent": null,
+  "subtitle": "Five territories, four distinct constructions in each.",
+  "references": [],
+  "retired": [],
+  "review": { "selection_max": 5 },
   "concepts": [
     {
       "id": "D1-01",
-      "title": "Short direction name",
+      "title": "Signal Window",
       "file": "D1-01.svg",
-      "territory": "metaphor or construction territory",
-      "note": "one sentence explaining the distinctive move"
+      "territory": "Signal made legible",
+      "move": "A narrow opening turns a noisy field into one clear bearing.",
+      "watch": "The opening must survive at 16 px."
     }
   ]
 }
 ```
 
-Render the numbered comparison sheet:
+Use `mode: "open"` only when grouping would create false certainty. Every
+concept still needs a territory label.
+
+Render the standard matching PNG and standalone HTML review sheets:
 
 ```sh
 python3 "<skill-directory>/scripts/render_concept_sheet.py" \
@@ -152,43 +221,123 @@ python3 "<skill-directory>/scripts/render_concept_sheet.py" \
   --output path/to/discovery/d1/discovery-d1.png
 ```
 
-Open and inspect the PNG. Confirm the sheet contains large, reverse, and native-size views. Deliver it with a compact territory summary. Stop after the sheet and wait for one of these instructions:
+The command writes `discovery-d1.png` and `discovery-d1.html`. The HTML embeds
+all SVGs and styles, runs without a server, supports ordered ID selection, and
+copies the next request. The PNG and HTML must show the same groups, IDs,
+lineage, and contexts.
+
+Open and inspect both. Confirm large, lockup, 16/24/32 px, reverse, and app-tile
+views. Deliver both with a compact territory map. Stop after the sheet.
+
+Useful user continuations:
 
 ```text
 Refine D1-07.
+Refine the shortlist D1-07, D1-12, and D1-18.
 Continue discovery from D1-07 and D1-12, but make the next round quieter.
-Change the brief: avoid enclosed badges and explore a more open silhouette.
+Change the brief: avoid enclosed badges and explore an open silhouette.
 ```
 
-Continued discovery normally creates another 20 distinct directions with IDs `D2-01` through `D2-20`.
+Continued discovery uses `D2-*`, `D3-*`, and so on.
 
 ## Stage 2: refinement
 
-Start from one explicit discovery selection. Generate eight variants by default. Preserve the core idea while varying proportion, topology, counter shape, stroke or fill strategy, corner language, and optical balance.
+Choose a mode that matches the request:
 
-Use IDs `R1-01` through `R1-08`. Set `stage` to `refinement` and set `selected_parent` to the selected discovery ID in `concepts.json`. Render the same standard sheet:
+- `shortlist`: develop several promising parents in one grouped round.
+- `controlled`: hold the parent steady and change one deliberate variable per
+  candidate.
+- `exploratory`: allow larger structural moves while preserving the idea.
+- `optical`: keep topology fixed and tune weight, spacing, alignment, and
+  native-size behavior.
 
-```sh
-python3 "<skill-directory>/scripts/render_concept_sheet.py" \
-  path/to/refinement/r1/concepts.json \
-  --output path/to/refinement/r1/refinement-r1.png
+One parent normally gets eight candidates. For several parents, use enough
+candidates to compare each fairly and group them by parent.
+
+References make the decision honest:
+
+- `parent`: source geometry being developed; it stays unchanged and selectable
+  in the reference bar.
+- `control`: unchanged non-parent candidate kept in the race.
+- `benchmark`: unchanged reviewed high-water mark.
+
+Every refinement concept names a reference whose role is `parent`. Keep all
+references visible and selectable. A parent, control, benchmark, or new
+candidate can win. When several selected sources are being developed, give each
+role `parent` and use `assets/shortlist-sheet.example.json`.
+
+```json
+{
+  "schema": "kalebtec.icon-round.v2",
+  "project": "Northstar",
+  "wordmark": "Northstar",
+  "stage": "refinement",
+  "round": 1,
+  "mode": "controlled",
+  "count": 8,
+  "subtitle": "Eight focused moves against one unchanged parent.",
+  "references": [
+    {
+      "id": "D1-07",
+      "title": "Selected parent",
+      "file": "../../discovery/d1/D1-07.svg",
+      "role": "parent",
+      "note": "Keep unchanged, selectable, and grouped with its variants."
+    }
+  ],
+  "retired": [],
+  "review": { "selection_max": 3 },
+  "concepts": [
+    {
+      "id": "R1-01",
+      "title": "Wider counter",
+      "file": "R1-01.svg",
+      "parent": "D1-07",
+      "territory": "Counter proportion",
+      "move": "Opens the counter without changing the silhouette.",
+      "watch": "Check whether the junction feels too light.",
+      "risk": "May lose the parent's compactness."
+    }
+  ]
+}
 ```
 
-Open and inspect the sheet. Explain only meaningful differences. Stop after the sheet and wait for a numbered choice:
+Render with the same command and inspect both outputs. Explain only the
+meaningful differences, then stop. The user can finalize a candidate or parent,
+refine one or more further, or return to discovery.
 
-```text
-Finalize R1-04.
-Refine R1-04 further with a larger counter and less lower-right weight.
-Back to discovery.
+Continued refinement uses `R2-*`. If `R4-01` through `R4-12` were abandoned,
+put them in `retired` and begin the replacement at `R4-13`. IDs within one
+manifest must remain consecutive. If current numbering begins above `01`, every
+earlier ID in that stage and round must be listed in `retired`. Current concept,
+reference, and retired IDs cannot overlap.
+
+A reference filename must begin with its ID, such as `D1-07.svg` or
+`D1-07-signal-window.svg`. This keeps the visible source geometry tied to the
+recorded lineage. Set `review.selection_max` to at least 3 when the reviewer may
+carry several IDs into another round; finalization still requires one ID.
+
+Only include a rating when a person supplied it. Ratings belong on references,
+which represent already reviewed work; never pre-rate a new concept:
+
+```json
+{
+  "value": 8.5,
+  "out_of": 10,
+  "attributed_to": "Rowin"
+}
 ```
 
-Continued refinement uses `R2-*` and records the selected discovery or refinement parent.
+Never invent approval, scores, or testimonials.
 
 ## Stage 3: final
 
-Begin only after an explicit user choice, or when the user supplies an already approved SVG and asks only for production cleanup and exports.
+Begin only from an explicit user choice, or from an approved SVG supplied for
+cleanup and export. Copy the selected source geometry into
+`final/source/mark.svg`; change it only for documented optical correction.
 
-Build a simple square canonical vector master. Keep visible master fills and strokes as `currentColor`. Apply optical corrections and inspect every requested native size and background. Color, material, and depth belong in derived contexts, not the master.
+The canonical master must be square and monochrome with visible paint expressed
+as `currentColor`. Keep color, depth, and material in derived contexts.
 
 Prepare:
 
@@ -198,7 +347,7 @@ final/source/
   mark.svg
 ```
 
-Minimum `design.json` shape:
+Minimum `design.json`:
 
 ```json
 {
@@ -206,7 +355,7 @@ Minimum `design.json` shape:
   "slug": "product-name",
   "aria_label": "Product name",
   "description": "A compact mark for Product name.",
-  "story": "The visual idea and why the geometry supports it.",
+  "story": "The visual idea and why its geometry supports it.",
   "source_svg": "mark.svg",
   "palette": {
     "ink": "#202124",
@@ -234,7 +383,7 @@ Minimum `design.json` shape:
 }
 ```
 
-Render and validate the suite:
+Render and validate:
 
 ```sh
 python3 "<skill-directory>/scripts/render_suite.py" \
@@ -246,15 +395,13 @@ python3 "<skill-directory>/scripts/validate_suite.py" \
   --zip path/to/final/<slug>-brand-suite.zip
 ```
 
-`render_suite.py` also accepts `--zip PATH` or `--no-zip`. The standard flow creates the neighboring reproducible zip.
-
-Install rendering dependencies outside the deliverable if needed:
+Install dependencies outside the deliverable if needed:
 
 ```sh
 python3 -m pip install -r "<skill-directory>/scripts/requirements.txt"
 ```
 
-An isolated alternative is:
+Or use an isolated run:
 
 ```sh
 uv run --with cairosvg --with pillow python \
@@ -263,7 +410,8 @@ uv run --with cairosvg --with pillow python \
   --output path/to/final/brand-suite
 ```
 
-On Apple Silicon with Homebrew, if CairoSVG cannot find Cairo, prefix the render command with:
+On Apple Silicon with Homebrew, if CairoSVG cannot find Cairo, prefix the
+command with:
 
 ```sh
 DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib
@@ -271,21 +419,23 @@ DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib
 
 ## Standard final package
 
-The uncompressed suite and neighboring zip contain:
+The complete package is the default. It includes:
 
-- Canonical `<slug>-mark.svg` using `currentColor`.
-- Fixed `<slug>-mark-black.svg` and `<slug>-mark-white.svg`.
-- Rounded-tile `<slug>-favicon.svg`.
-- Multi-size `favicon.ico` plus 16, 32, and 48 px PNGs.
-- `apple-touch-icon.png` at 180 px.
-- Opaque `<slug>-app-icon-1024.png`.
-- Transparent rounded `<slug>-app-icon-preview-1024.png`.
-- Opaque circle-crop-safe `<slug>-avatar-512.png`.
-- Flat Icon Composer background and transparent mark layers.
-- App-icon and favicon comparison sheets.
-- `design.json`, `render.py`, `requirements.txt`, `README.md`, and `LICENSE`.
+- canonical `<slug>-mark.svg` using `currentColor`;
+- fixed black and white SVGs;
+- rounded-tile favicon SVG;
+- multi-size `favicon.ico` and 16/32/48 px PNGs;
+- 180 px Apple touch icon;
+- opaque 1024 px app icon;
+- transparent rounded 1024 px app preview;
+- opaque circle-crop-safe 512 px avatar;
+- flat Apple Icon Composer background and mark layers;
+- app-icon and favicon comparison sheets;
+- `design.json`, `render.py`, `requirements.txt`, `README.md`, and `LICENSE`;
+- a neighboring reproducible zip matching the uncompressed suite.
 
-The zip has no extra top-level directory and must match the uncompressed suite exactly. Keep discovery, refinement, prompts, chat logs, local paths, temporary environments, and design-tool screenshots outside it.
+Keep briefs, discovery, refinement, prompts, chat logs, local paths, temporary
+environments, and screenshots outside the production zip.
 
 ## Drawing rules
 
@@ -295,89 +445,68 @@ Translate the brief through:
 brand or task -> useful metaphor -> basic shapes -> distinctive move
 ```
 
-- Research conventions and obvious competitors when web access is available. Use research to avoid collisions, never to trace or remix another mark. Do not claim trademark clearance.
-- Start with meaning. For UI icons, prefer a learned metaphor. For brand marks, distill purpose, audience, personality, and memorable tension.
-- Use a square grid, explicit safe area, repeated dimensions, a small anchor-point count, and a coherent corner and angle system.
-- Use ratios only when they clarify relationships. Do not add ornamental construction circles after the fact.
-- Check the outside silhouette and largest counters before polishing details.
-- Test square, rounded-square, circular, light, dark, muted, and selected contexts as relevant.
-- Inspect 16, 20, 24, 32, and 48 px outputs when relevant. Protect counters and critical gaps. Draw an explicit small-size optical variant if simple scaling fails.
-- Use at least 3:1 contrast for meaningful graphical objects. Do not use color as the only state signal.
-- Pair ambiguous workflow icons with text. Give meaningful UI icons accessible names and hide decorative icons from the accessibility tree.
+- Research category conventions and obvious competitors when web access is
+  available. Avoid collisions; never trace or claim trademark clearance.
+- Use a square grid, deliberate safe area, repeated dimensions, few anchor
+  points, and coherent corner and angle systems.
+- Judge the outside silhouette and largest counters before details.
+- Check square, rounded-square, circle, light, dark, muted, selected, lockup,
+  and app-tile contexts as relevant.
+- Inspect 16, 20, 24, 32, and 48 px at native size. Protect counters and gaps.
+  Draw a dedicated small-size optical variant when scaling fails.
+- Use at least 3:1 contrast for meaningful graphical objects. Do not use color
+  as the only state signal.
+- Pair ambiguous workflow icons with text. Give meaningful UI icons accessible
+  names and hide decorative icons from accessibility APIs.
 
-## Master SVG rules
-
-The canonical master must have:
-
-- A square `viewBox`.
-- Visible paint expressed as `currentColor`.
-- No embedded bitmap.
-- No external reference.
-- No script.
-- No text object.
-- No decorative filter.
-- No unnecessary editor metadata or transforms.
-
-Preserve an editable construction source before expanding strokes or merging paths.
+The canonical SVG must have no embedded bitmap, external reference, script,
+text object, decorative filter, or unnecessary editor metadata.
 
 ## Visual and automated validation
 
-Visual checks are mandatory. Source inspection is not a visual check.
+Rendering and looking are mandatory. Source inspection is not a visual check.
 
-Open every comparison sheet and inspect 16 and 32 px rasters at native size. Confirm:
+Confirm:
 
-- The metaphor and silhouette survive.
-- Counters stay open.
-- The mark is optically centered in square and circular crops.
-- Tile radius and mark scale feel related.
-- The light mark has at least 3:1 contrast against both background endpoints.
-- The app master is opaque.
-- Rounded previews have transparent corners.
-- The Composer mark layer is flat and transparent outside the mark.
-- Fixed SVG variants contain no `currentColor`.
-- The canonical SVG contains no embedded image, script, or external reference.
+- metaphor and silhouette survive native sizes;
+- counters stay open;
+- the mark is optically centered in square and circular crops;
+- tile radius and mark scale feel related;
+- light mark contrast is at least 3:1 against both background endpoints;
+- app master is opaque;
+- rounded previews have transparent corners;
+- Composer mark layer is flat and transparent outside the mark;
+- fixed SVGs contain no `currentColor`;
+- canonical SVG contains no bitmap, script, or external reference;
+- the zip exactly matches the uncompressed suite.
 
-Automated validation checks structure and file formats; it cannot decide whether an icon is good.
+Automated validation checks structure and formats. It does not decide whether a
+mark is good.
 
-## Existing SVG, audit, and direct-final routes
-
-- Existing approved SVG plus cleanup/export request: skip discovery and refinement, audit the master, then run final.
-- `Refine <ID>`: locate that concept and begin or continue refinement.
-- `Finalize <ID>`: promote that exact concept to final.
-- New metaphor or story: return to discovery.
-- Style change within a selected idea: stay in refinement.
-- Icon-family audit: compare grid, weight, corners, angles, counters, optical size, native-size rendering, context, and accessibility.
-
-## Handoff response
+## Handoff
 
 Report:
 
-- Chosen concept ID.
-- Final zip and uncompressed suite paths.
-- Smallest verified size.
-- Optical corrections made.
-- Backgrounds and contexts checked.
-- Any remaining limitation.
+- chosen concept ID and lineage;
+- final zip and uncompressed suite paths;
+- smallest verified size;
+- optical corrections made;
+- backgrounds and contexts checked;
+- remaining limits.
 
-Keep notes factual. Do not invent testimonials, trademark clearance, validation results, or checks that were not run. Do not add tool attribution to generated brand assets or their README.
+Keep notes factual. Do not invent tests, approval, trademark clearance, or
+scores. Do not add tool attribution to generated brand assets or their README.
 
-## Repository development and release commands
+## Repository development
 
-Run the standalone Solid app:
+Run the site:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Build and preview:
-
-```sh
-npm run build
-npm run preview
-```
-
-Run web tests and sync the single-file builder into the plugin:
+Run web tests, build, and sync the plugin builder:
 
 ```sh
 npm run check
@@ -389,21 +518,43 @@ Run renderer and workflow tests:
 uv run --with cairosvg --with pillow python -m unittest discover -s tests -v
 ```
 
-Deploy the linked site to Netlify:
+Validate Claude Code packaging:
 
 ```sh
-netlify build
+claude plugin validate plugins/icon-design --strict
+claude plugin validate . --strict
+```
+
+Validate the Codex plugin:
+
+```sh
+uv run --with pyyaml python \
+  "${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator/scripts/validate_plugin.py" \
+  plugins/icon-design
+```
+
+Deploy the linked Netlify site:
+
+```sh
 netlify deploy --build --prod
 ```
 
 ## Authoritative links
 
-- [Visual brief builder](https://icons.kalebtec.com/): Interactive three-step brief and prompt export.
-- [Repository](https://github.com/kalebteccom/claude-icon-design): Plugin, source app, renderers, examples, and tests.
-- [Agent guide](https://icons.kalebtec.com/llms.txt): This complete plaintext workflow.
-- [Material Design 3 icon guidance](https://m3.material.io/styles/icons/designing-icons): Grid and optical sizing reference.
-- [Adobe icon design, Part 1](https://adobe.design/ideas/how-to-design-effective-icons-part-1): Meaning and recognition reference.
-- [Adobe icon design, Part 2](https://adobe.design/ideas/how-to-design-effective-icons-part-2): System and refinement reference.
-- [Icons8 pixel-perfect icon guide](https://icons8.com/blog/articles/make-pixel-perfect-icons/): Small-size raster guidance.
-- [Figma logo design guide](https://www.figma.com/resource-library/how-to-design-a-logo/): Brief-to-concept process reference.
-- [Supercharged Studio logo design math](https://www.supercharged.studio/blog/mathematical-logo-design): Geometry and proportion reference.
+- Builder: https://icons.kalebtec.com/
+- Repository: https://github.com/kalebteccom/claude-icon-design
+- Agent guide: https://icons.kalebtec.com/llms.txt
+- Kalebtec brand-asset notice:
+  https://github.com/kalebteccom/claude-icon-design/blob/main/BRAND-ASSETS.md
+- Material Design 3 icon guidance:
+  https://m3.material.io/styles/icons/designing-icons
+- Adobe effective icons, Part 1:
+  https://adobe.design/ideas/how-to-design-effective-icons-part-1
+- Adobe effective icons, Part 2:
+  https://adobe.design/ideas/how-to-design-effective-icons-part-2
+- Icons8 pixel-perfect guide:
+  https://icons8.com/blog/articles/make-pixel-perfect-icons/
+- Figma logo design guide:
+  https://www.figma.com/resource-library/how-to-design-a-logo/
+- Supercharged Studio logo design math:
+  https://www.supercharged.studio/blog/mathematical-logo-design

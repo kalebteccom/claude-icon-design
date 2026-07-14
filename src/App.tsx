@@ -2,6 +2,8 @@ import { For, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { CharacterConfigurator } from "./components/CharacterConfigurator";
 import { Glyph } from "./components/Glyph";
 import { HowItWorks } from "./components/HowItWorks";
+import { KalebtecMark } from "./components/KalebtecMark";
+import { ProcessShowcase } from "./components/ProcessShowcase";
 import { STYLE_OPTIONS, StyleSpecimen, type StyleId } from "./components/StyleSpecimen";
 import { Stepper } from "./components/Stepper";
 import type { CharacterPreset } from "./data/presets";
@@ -222,7 +224,7 @@ function App() {
     <div class="app-shell">
       <header class="site-header">
         <a class="brand" href="https://kalebtec.com" aria-label="Kalebtec home">
-          <span class="brand-mark" aria-hidden="true">K</span><span>Kalebtec</span>
+          <span class="brand-mark" aria-hidden="true"><KalebtecMark /></span><span>Kalebtec</span>
         </a>
         <nav class="header-actions" aria-label="Page links">
           <a href="https://github.com/kalebteccom/claude-icon-design">GitHub</a>
@@ -339,12 +341,14 @@ function App() {
             <p class="toast" role="status" aria-live="polite">{toast()}</p>
           </aside>
         </div>
+        <ProcessShowcase />
       </main>
 
       <footer>
         <div class="footer-meta">
-          <span>Kalebtec Icon Brief</span>
+          <span class="footer-brand"><KalebtecMark /> Kalebtec Icon Brief</span>
           <span>Local-first · open source · your brief stays in this browser · <a href="/llms.txt">Agent guide</a></span>
+          <span>Kalebtec name, logo, and mark © 2026 Kalebtec. All rights reserved.</span>
         </div>
         <span class="footer-credit">Made with love <span class="footer-heart" aria-hidden="true">♥</span> by <a href="https://kalebtec.com">Kalebtec</a></span>
       </footer>

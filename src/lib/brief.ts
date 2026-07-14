@@ -81,7 +81,7 @@ export function createDefaultBrief(): BriefState {
     workflow: {
       stage: "discovery",
       round: 1,
-      output: "numbered concept SVGs, concepts.json, and the standard PNG sheet",
+      output: "numbered concept SVGs, a v2 concepts.json, and matching PNG and standalone HTML review sheets",
       stopAfterStage: true
     }
   };
@@ -209,7 +209,7 @@ export function buildPrompt(state: BriefState): string {
     `Color: monochrome currentColor master; color only in derived assets. Palette constraints: ${display(state.palette, "none supplied")}.`,
     `Verification: smallest size ${state.smallest}; backgrounds ${display(state.backgrounds)}.`,
     `Avoid: ${display(state.avoid, "obvious clichés and competitor lookalikes")}.`,
-    "Discovery output: 20 genuinely distinct representations, IDs D1-01 through D1-20, one currentColor SVG per direction, concepts.json, and one numbered comparison-sheet PNG. Show large, dark-background, and native-size views.",
+    "Discovery output: 20 genuinely distinct representations arranged as five useful territories with four structurally different constructions each. Use IDs D1-01 through D1-20, one currentColor SVG per direction, a kalebtec.icon-round.v2 concepts.json, and matching numbered PNG and standalone HTML review sheets. Show large, lockup, dark-background, app-tile, and 16/24/32 px views.",
     "After the sheet, summarize the territories briefly and wait for a numbered selection or another discovery instruction.",
     "After final approval, export the complete package: canonical and fixed SVGs, favicon PNG/ICO/SVG, app icon, social avatar, Composer layers, comparison sheets, source, README, license, and reproducible zip.",
     state.deliveryNotes ? `Additional delivery notes: ${state.deliveryNotes}.` : ""

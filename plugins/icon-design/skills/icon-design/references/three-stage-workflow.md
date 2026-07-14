@@ -1,47 +1,43 @@
 # Three-stage icon workflow
 
-Use this workflow for a new icon or compact brand mark. The guided brief is
-optional; discovery, refinement, and final delivery are the three production
-stages.
-
-## Contents
-
-- [Optional guided brief](#optional-guided-brief)
-- [Project structure](#project-structure)
-- [Stage 1: discovery](#stage-1-discovery)
-- [Stage 2: refinement](#stage-2-refinement)
-- [Stage 3: final](#stage-3-final)
-- [Changing direction](#changing-direction)
+The guided brief is optional preparation. Discovery, refinement, and final are
+the three production stages. Every working round has stable IDs and two review
+formats generated from one manifest.
 
 ## Optional guided brief
 
-Launch the bundled brief builder when the user asks for guidance, wants a
-moodboard, or has not supplied enough direction to make useful concepts:
+Launch the bundled builder when the user asks for guidance, wants a moodboard,
+or has not supplied enough direction:
 
 ```sh
 python3 "<skill-directory>/scripts/launch_brief_builder.py"
 ```
 
-The builder uses original style specimens rather than existing logos. It saves
-locally in the browser and can copy a compact discovery prompt or export the
-same brief as text or JSON. Treat a pasted builder prompt as the agreed brief;
-do not ask the user to repeat its fields.
+The builder uses original specimens rather than existing logos. It saves in the
+browser and exports a compact prompt, text brief, or JSON. A pasted builder
+export is the agreed brief; do not ask the user to repeat it.
 
 ## Project structure
-
-Keep every round addressable and keep rejected work out of the final zip:
 
 ```text
 icon-project/
   brief.json
   discovery/
-    d1/concepts.json
-    d1/D1-01.svg ... D1-20.svg
-    d1/discovery-d1.png
+    d1/
+      concepts.json
+      D1-01.svg ... D1-20.svg
+      discovery-d1.png
+      discovery-d1.html
   refinement/
-    r1/concepts.json
-    r1/R1-01.svg ... R1-08.svg
-    r1/refinement-r1.png
+    r1/
+      concepts.json
+      R1-01.svg ... R1-08.svg
+      refinement-r1.png
+      refinement-r1.html
+  archive/
+    r4-rejected/
+      concepts.json
+      R4-01.svg ... R4-12.svg
   final/
     source/design.json
     source/mark.svg
@@ -50,38 +46,26 @@ icon-project/
 ```
 
 Use `D<round>-<two-digit number>` for discovery and
-`R<round>-<two-digit number>` for refinement. Never recycle an ID within a
-project.
+`R<round>-<two-digit number>` for refinement. Never recycle an ID. Keep source
+SVGs and manifests for provenance; regenerate sheets rather than copying stale
+ones into archives.
 
 ## Stage 1: discovery
 
-Generate 20 genuinely different representations by default. Vary the useful
-metaphor, silhouette, construction logic, negative-space move, and visual
-rhythm. Do not fill the sheet with small styling changes to one drawing.
+The default round is a 5 × 4 exploration:
 
-For every concept, create a square monochrome SVG using `currentColor` and add
-an entry to `concepts.json`:
+1. Derive five useful territories from the purpose, audience, promising
+   metaphors, constraints, and category research.
+2. Draw four structurally different representations in each territory.
+3. Check that all 20 remain legible as monochrome silhouettes and at native
+   sizes.
+4. Describe the deliberate move and the main thing to watch for each concept.
 
-```json
-{
-  "project": "Project name",
-  "stage": "discovery",
-  "round": 1,
-  "count": 20,
-  "selected_parent": null,
-  "concepts": [
-    {
-      "id": "D1-01",
-      "title": "Short direction name",
-      "file": "D1-01.svg",
-      "territory": "metaphor or construction territory",
-      "note": "one sentence explaining the distinctive move"
-    }
-  ]
-}
-```
+Use `mode: "territory"` in the v2 manifest. Use `mode: "open"` only when the
+brief benefits from a less structured search. Follow
+`round-manifest.md` for the exact fields.
 
-Render the standard numbered sheet:
+Render both review formats:
 
 ```sh
 python3 "<skill-directory>/scripts/render_concept_sheet.py" \
@@ -89,43 +73,70 @@ python3 "<skill-directory>/scripts/render_concept_sheet.py" \
   --output path/to/discovery/d1/discovery-d1.png
 ```
 
-Open the sheet and inspect it before delivery. Send the sheet plus a compact
-territory summary, then stop. Offer exactly useful next moves such as
-`Refine D1-07`, `Continue discovery from D1-07 and D1-12`, or
-`Change the brief: ...`.
+The PNG and HTML must contain the same IDs and groups. Open both before
+delivery. Send them with a short territory map, then stop. Useful continuations
+include:
 
-A continued discovery round normally adds another 20 concepts as `D2-*`. It
-may keep a promising territory, but must still explore distinct constructions.
+```text
+Refine D1-07.
+Refine the shortlist D1-07, D1-12, and D1-18.
+Continue discovery from D1-07 and D1-12, but make the next round quieter.
+Change the brief: avoid enclosed badges and explore an open silhouette.
+```
+
+Further discovery uses `D2-*`, `D3-*`, and so on. It may preserve useful
+territories but must introduce genuinely different constructions.
 
 ## Stage 2: refinement
 
-Start from one selected discovery ID. Create eight variants by default and
-record that ID in `selected_parent`. Hold the concept constant while varying
-proportion, topology, counter shape, stroke or fill strategy, corner language,
-and optical balance. Use `R1-01` through `R1-08` and render the same standard
-sheet with `stage` set to `refinement`.
+Choose a mode intentionally:
 
-Show large, dark-background, and native-size views. Send the sheet, name the
-meaningful differences, then stop. Offer `Finalize R1-04`,
-`Refine R1-04 with ...`, or `Back to discovery`.
+| Mode | Use it for | Keep fixed |
+| --- | --- | --- |
+| `shortlist` | Comparing several promising parents | Every parent shown unchanged in the reference bar |
+| `controlled` | Focused proportion or construction decisions | Core idea and all untouched variables |
+| `exploratory` | Larger structural alternatives within one idea | Recognizable premise and purpose |
+| `optical` | Native-size and balance corrections | Topology and overall silhouette |
 
-Further refinement uses `R2-*` and sets `selected_parent` to the chosen prior
-discovery or refinement ID.
+One parent normally gets eight candidates. A shortlist can use several parents;
+give every source being developed role `parent`, group candidates by parent,
+and keep every reference selectable. A parent, control, benchmark, or new
+candidate can be the final winner.
+
+In the v2 manifest:
+
+- list source parents, unchanged controls, and useful benchmarks in
+  `references`;
+- set every candidate's `parent` to one listed reference whose role is
+  `parent`;
+- describe the deliberate `move`, plus `watch` and `risk` when useful;
+- list abandoned IDs in `retired` and continue numbering from the next unused
+  ID;
+- set `review.selection_max` to at least 3 when a shortlist may continue;
+- include ratings only on references and only when a named reviewer supplied
+  them.
+
+Render the matching PNG and HTML pages, inspect both, explain only the
+meaningful differences, and stop. The user can finalize any candidate or
+control, refine one or several further, or return to discovery.
 
 ## Stage 3: final
 
-Start only after the user chooses one refinement ID or explicitly promotes a
-discovery ID. Build the canonical `currentColor` SVG, make optical corrections,
-and verify every requested native size and background. Then follow
-`delivery-contract.md` to create and validate the production suite and zip.
+Begin only after an explicit choice or with an already approved source SVG. The
+chosen path may be a discovery concept, refinement candidate, parent, or
+control. Copy that exact geometry into `final/source/mark.svg`; only change it
+for documented optical correction.
 
-Deliver the final files with the chosen ID, smallest verified size, optical
-corrections, and any remaining limitation. The final zip contains production
-assets only, not discovery or refinement rounds.
+Check the canonical `currentColor` master at required native sizes and
+backgrounds, then follow `delivery-contract.md`. The full production suite and
+zip are the default. Working discovery and refinement files stay outside it.
+
+Deliver the final files with the winning ID, lineage, smallest verified size,
+optical corrections, and remaining limits.
 
 ## Changing direction
 
-Keep the current brief unless the user changes it. A style adjustment within a
-selected idea belongs in refinement. A new metaphor or story returns to
-discovery. If the user supplies an existing SVG and asks only for production
-exports, skip discovery and refinement and go directly to final delivery.
+A proportion, spacing, corner, weight, or topology adjustment within a selected
+idea belongs in refinement. A new story or metaphor returns to discovery. If a
+round is rejected, archive its sources and manifest, retire its IDs, and start
+the replacement at the next unused number.

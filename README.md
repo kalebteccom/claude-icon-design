@@ -1,35 +1,51 @@
-# Icon Design for Claude Code and Codex
+<p align="center">
+  <img src=".github/icon-design-mark.svg" width="112" height="112" alt="Kalebtec logo">
+</p>
 
-Icon Design turns a loose idea into a finished icon through three deliberate
-stages: discovery, refinement, and final delivery. It keeps exploration broad at
-the start, makes every option easy to reference by number, and waits for a choice
-before polishing or exporting anything.
+<h1 align="center">Icon Design</h1>
 
-The same skill runs in Claude Code and Codex. It can also audit an icon family,
-clean up an existing SVG, or take an approved mark straight to a reproducible
-brand asset suite.
+<p align="center">
+  A deliberate path from a loose idea to a production-ready icon.<br>
+  Built for Claude Code, Codex, and the browser.
+</p>
 
-[Open the visual brief builder](https://icons.kalebtec.com/) without installing
-anything, then paste its compact export into your preferred chatbot.
-Agents and terminal users can read the complete single-file workflow at
-[icons.kalebtec.com/llms.txt](https://icons.kalebtec.com/llms.txt).
+<p align="center">
+  <a href="https://icons.kalebtec.com/"><strong>Open the brief builder</strong></a>
+  ·
+  <a href="https://icons.kalebtec.com/llms.txt">Read the agent guide</a>
+  ·
+  <a href="https://github.com/kalebteccom/claude-icon-design">GitHub</a>
+</p>
 
-## Install in Codex
+---
 
-You need a Codex build that includes the `codex plugin` command.
+Icon Design separates exploration from decision-making. It starts wide, keeps
+every direction addressable by ID, and pauses for a human choice before it
+refines or packages anything.
+
+The same repository contains:
+
+- a plugin for Claude Code and Codex;
+- a visual brief builder at [icons.kalebtec.com](https://icons.kalebtec.com/);
+- a standard PNG and standalone HTML format for discovery and refinement;
+- a reproducible renderer for the complete final asset package.
+
+## Install
+
+### Codex
 
 ```sh
 codex plugin marketplace add kalebteccom/claude-icon-design
 codex plugin add icon-design@kalebtec-icon-design
 ```
 
-Start a new Codex conversation after installation, then use `$icon-design`:
+Start a new conversation after installation, then use:
 
 ```text
 Use $icon-design to open the guided brief builder.
 ```
 
-## Install in Claude Code
+### Claude Code
 
 ```sh
 claude plugin marketplace add kalebteccom/claude-icon-design
@@ -42,86 +58,36 @@ Restart Claude Code or run `/reload-plugins`, then use:
 /icon-design:icon-design
 ```
 
-Both runtimes also select the skill from an ordinary request about icon design,
-concept exploration, SVG refinement, favicons, app icons, or a brand-suite
-export.
+Ordinary requests work too. Ask for icon discovery, a numbered refinement, an
+SVG audit, favicon cleanup, or a complete brand-suite export.
 
-## Start with the guided brief
+## The workflow
 
-Ask the skill to open the brief builder when you want help choosing a direction.
-It walks through purpose, style references, and character. Guided mode offers
-six ready-made character presets with useful style pairings. Custom mode exposes
-the six axes and a 64-cell matrix. Every matrix cell uses the same 2/4 values it
-applies to the live specimen, so its preview and selected result match exactly.
-The style specimens are original reference shapes, not logos to imitate.
+| Stage | What happens | Review output |
+| --- | --- | --- |
+| **1 · Discovery** | 20 distinct ideas, normally arranged as five territories with four constructions each | Matching numbered PNG and HTML sheets |
+| **2 · Refinement** | One parent or a shortlist is developed while the source controls stay visible | Matching PNG and HTML sheets with lineage and ordered selection |
+| **3 · Final** | One explicit choice is corrected, verified, and packaged | Complete SVG, favicon, app-icon, source, comparison-sheet, and zip package |
 
-The complete asset package is the default. Small-size, background, palette, and
-extra handoff constraints sit under an optional `Customize delivery` section
-instead of taking up a separate step.
+The HTML review page is self-contained. It embeds the concept SVGs, opens
+without a server, lets a reviewer select IDs in order, and copies a compact
+request for the next round. The PNG is the stable record for sharing or
+archiving. Both come from the same `concepts.json`.
 
-The builder produces a compact discovery prompt that can be:
+### Discovery
 
-- copied directly into Codex, Claude Code, or another chatbot;
-- saved as a plain-text brief;
-- saved as JSON and imported again later;
-- adjusted without sending unfinished choices to a chat.
+The default discovery round creates `D1-01` through `D1-20`. A useful first
+round changes the metaphor, silhouette, construction logic, negative space,
+and rhythm—not just the corner radius or line weight.
 
-It is a single local file with no server, account, or network request. From a
-repository clone, open it with:
-
-```sh
-python3 plugins/icon-design/skills/icon-design/scripts/launch_brief_builder.py
-```
-
-## Run the standalone web app
-
-The brief builder is a Solid app at the repository root. It builds to one static
-HTML file, so it can run on a file URL, GitHub Pages, or any static host without
-a server or API.
-
-```sh
-npm install
-npm run dev
-```
-
-Create the production site build in `dist/`:
-
-```sh
-npm run build
-npm run preview
-```
-
-The plugin bundles the same app rather than maintaining a separate copy. After
-changing the web app, rebuild and sync that single-file bundle with:
-
-```sh
-npm run build:plugin
-```
-
-## Deploy on Netlify
-
-Netlify reads the production build, publish directory, and response headers from
-`netlify.toml`. Once the repository is linked to a Netlify project, deploy with:
-
-```sh
-netlify deploy --build --prod
-```
-
-The live builder is served at [icons.kalebtec.com](https://icons.kalebtec.com/).
-
-## The three stages
-
-### 1. Discovery
-
-Discovery creates 20 genuinely different representations by default. Each one
-gets an ID from `D1-01` to `D1-20`, its own monochrome SVG, a short concept note,
-and a place on a standard comparison sheet. The sheet shows every direction at
-large size, in reverse, and at native size.
-
-The skill stops after the sheet. Continue with a precise instruction:
+After reviewing the sheets, continue with a precise instruction:
 
 ```text
 Refine D1-07.
+```
+
+```text
+Refine the shortlist D1-07, D1-12, and D1-18.
 ```
 
 ```text
@@ -129,114 +95,163 @@ Continue discovery from D1-07 and D1-12, but make the next round quieter and
 more geometric.
 ```
 
-```text
-Change the brief: avoid enclosed badges and explore a more open silhouette.
-```
+### Refinement
 
-Further discovery uses `D2-*`, `D3-*`, and so on, so a selection never becomes
-ambiguous.
-
-### 2. Refinement
-
-Refinement starts from one selected discovery ID and produces eight variants by
-default. It preserves the idea while testing proportion, topology, counter
-shape, stroke or fill, corners, and optical balance. The variants use IDs such
-as `R1-01` through `R1-08` and appear on the same standard sheet.
-
-The skill stops again. You can finalize one, refine it further, or return to
-discovery:
+Refinement can be controlled, exploratory, optical, or based on several
+parents. Selected parents, controls, and benchmarks stay unchanged and visible
+above the new candidates, so a new variant has to beat the source. Any visible
+reference can still be the final choice.
 
 ```text
 Finalize R1-04.
 ```
 
 ```text
-Refine R1-04 further with a larger counter and less visual weight on the lower
-right.
+Refine R1-04 further. Keep the topology, open the counter, and reduce the
+lower-right weight.
 ```
 
-### 3. Final
+IDs are never recycled. If a round is rejected, its sources and manifest are
+archived and the replacement starts at the next unused number.
 
-Final delivery starts only after a numbered choice. The chosen mark is corrected
-optically, checked on its required backgrounds and native sizes, and packaged as
-a reproducible asset suite.
+### Final
 
-If you already have an approved SVG, you can skip discovery and refinement:
+Final delivery begins only after a numbered choice. The selected geometry is
+kept intact unless an optical correction is necessary, checked at its required
+native sizes and backgrounds, then rendered into the complete package.
+
+If the mark is already approved, discovery and refinement can be skipped:
 
 ```text
-Use $icon-design to clean up assets/mark.svg and prepare the final suite. Keep
-the master monochrome and verify it at 16, 20, 24, and 32 px.
+Use $icon-design to clean up assets/mark.svg and prepare the complete final
+suite. Keep the canonical master monochrome and verify 16, 20, 24, and 32 px.
 ```
 
-## What a full export contains
+## What the final package contains
 
-The final zip includes:
-
-- a canonical `currentColor` SVG and fixed dark and light variants;
+- canonical `currentColor`, fixed-black, and fixed-white SVGs;
 - SVG, PNG, ICO, and Apple touch favicon assets;
 - 1024 px app-icon masters and a 512 px social avatar;
 - flat layers for Apple Icon Composer;
 - native-size favicon and app-icon comparison sheets;
-- the design spec and renderer needed to rebuild every derived asset;
-- a concise README and an explicit asset license.
+- `design.json`, the renderer, requirements, README, and asset license;
+- a reproducible zip that exactly matches the uncompressed suite.
 
-Discovery and refinement files stay in the working project and do not clutter
-the production zip.
+Discovery and refinement stay in the working project, outside the production
+zip.
+
+## Use the visual brief builder
+
+The builder turns purpose, visual references, and character into a compact
+discovery prompt. Guided mode offers coherent presets; Custom mode exposes six
+axes and a 64-cell reference matrix. Original specimens show the choices
+without asking anyone to interpret style adjectives blindly.
+
+The complete package is the default. Smaller delivery choices live under
+`Customize delivery` and stay out of the main flow.
+
+The builder can copy a prompt, save text, save JSON, and import a prior brief.
+It has no account, server, or upload step; unfinished work remains in the
+browser.
+
+From a clone:
+
+```sh
+python3 plugins/icon-design/skills/icon-design/scripts/launch_brief_builder.py
+```
+
+## Render a standard review round
+
+Install the bundled rendering requirements before the first round:
+
+```sh
+python3 -m pip install -r \
+  plugins/icon-design/skills/icon-design/scripts/requirements.txt
+```
+
+Create square monochrome `currentColor` SVGs and a v2 round manifest, then run:
+
+```sh
+python3 plugins/icon-design/skills/icon-design/scripts/render_concept_sheet.py \
+  path/to/concepts.json \
+  --output path/to/discovery-d1.png
+```
+
+The command writes both `discovery-d1.png` and `discovery-d1.html`. Use
+`--html-output` only when the HTML file needs a different name.
+
+The manifest contract and examples live in
+[`round-manifest.md`](plugins/icon-design/skills/icon-design/references/round-manifest.md).
+
+## Run the website
+
+```sh
+npm install
+npm run dev
+```
+
+Build the static site and sync the same single-file builder into the plugin:
+
+```sh
+npm run build:plugin
+```
+
+Netlify reads its build and response headers from `netlify.toml`. The linked
+production site can be deployed with:
+
+```sh
+netlify deploy --build --prod
+```
 
 ## Requirements
 
 - Codex with plugin support, or Claude Code 2.1.143 or newer;
-- Python 3.9 or newer for sheet and asset rendering;
+- Python 3.9 or newer;
 - CairoSVG 2.7 or newer and Pillow 10 or newer;
-- Node 20.19+ on the 20.x line, or Node 22.12+, for web development.
+- Node 20.19+ on the 20.x line, or Node 22.12+.
 
-On Apple Silicon Macs, a Homebrew Cairo install may need its library path made
-explicit when running either renderer:
+On Apple Silicon, Homebrew Cairo may need its library path made explicit:
 
 ```sh
 DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib python3 path/to/render_script.py
 ```
 
-## Method
-
-The workflow combines brand discovery, geometric construction, optical
-correction, pixel-grid checks, accessibility, and production handoff. The
-detailed design notes and reading list are in
-[`design-method.md`](plugins/icon-design/skills/icon-design/references/design-method.md).
-The round structure and file contract are in
-[`three-stage-workflow.md`](plugins/icon-design/skills/icon-design/references/three-stage-workflow.md).
-
 ## Development
 
-Validate the Claude Code packaging:
+Validate both plugin formats:
 
 ```sh
 claude plugin validate plugins/icon-design --strict
 claude plugin validate . --strict
-```
 
-Validate the Codex manifest:
-
-```sh
 uv run --with pyyaml python \
   "${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator/scripts/validate_plugin.py" \
   plugins/icon-design
 ```
 
-Run all renderer and workflow tests:
+Run the renderers and workflow tests:
 
 ```sh
 uv run --with cairosvg --with pillow python -m unittest discover -s tests -v
 ```
 
-Run the web tests, production build, and plugin bundle sync:
+Run the browser-side tests, production build, and bundled-builder sync:
 
 ```sh
 npm run check
 ```
 
-## License
+## Method and license
 
-The plugin code is released under the MIT License. Brand assets made with it
-belong to their respective owners and use the license selected for that asset
-suite.
+The design method combines brand discovery, geometric construction, optical
+correction, pixel-grid checks, accessibility, and production handoff. The
+reading notes are in
+[`design-method.md`](plugins/icon-design/skills/icon-design/references/design-method.md).
+
+The plugin and website code are MIT licensed. Brand assets made with the tool
+belong to their respective owners and use the license selected for that suite.
+
+The Kalebtec name, logo, and mark shown in this repository are the exclusive
+property of Kalebtec. Copyright © 2026 Kalebtec. All rights reserved. They are
+not included in the MIT License. See
+[`BRAND-ASSETS.md`](BRAND-ASSETS.md) for the full notice.

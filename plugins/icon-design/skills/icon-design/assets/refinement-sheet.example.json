@@ -1,0 +1,24 @@
+{
+  "schema": "kalebtec.icon-round.v2",
+  "project": "Project name",
+  "wordmark": "Project name",
+  "stage": "refinement",
+  "round": 1,
+  "mode": "controlled",
+  "count": 8,
+  "subtitle": "Eight focused moves against one unchanged parent.",
+  "references": [
+    {
+      "id": "D1-07",
+      "title": "Selected parent",
+      "file": "../../discovery/d1/D1-07.svg",
+      "role": "parent",
+      "note": "Keep unchanged as the control."
+    }
+  ],
+  "retired": [],
+  "review": {
+    "selection_max": 3
+  },
+  "concepts": []
+}

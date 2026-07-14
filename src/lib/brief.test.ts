@@ -18,6 +18,8 @@ describe("icon brief", () => {
       purpose: "Make handoffs clear"
     });
     expect(prompt).toContain("D1-01 through D1-20");
+    expect(prompt).toContain("five useful territories");
+    expect(prompt).toContain("standalone HTML review sheets");
     expect(prompt).toContain("wait for a numbered selection");
     expect(prompt).toContain("complete package");
   });
