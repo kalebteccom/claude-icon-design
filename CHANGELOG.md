@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.1 - 2026-07-14
+
+- Added the production Netlify build configuration and public-site metadata.
+- Added a self-contained `llms.txt` with the complete agent workflow, install
+  commands, production stages, validation rules, and release commands.
+- Added the Kalebtec footer credit and linked plugin homepages to the live
+  builder.
+- Added release-oriented response headers for the static deployment.
+
 ## 1.3.0 - 2026-07-13
 
 - Rebuilt the brief builder as a standalone Solid app with a single-file static

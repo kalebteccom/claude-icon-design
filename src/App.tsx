@@ -341,7 +341,13 @@ function App() {
         </div>
       </main>
 
-      <footer><span>Kalebtec Icon Brief</span><span>Local-first · open source · your brief stays in this browser</span></footer>
+      <footer>
+        <div class="footer-meta">
+          <span>Kalebtec Icon Brief</span>
+          <span>Local-first · open source · your brief stays in this browser · <a href="/llms.txt">Agent guide</a></span>
+        </div>
+        <span class="footer-credit">Made with love <span class="footer-heart" aria-hidden="true">♥</span> by <a href="https://kalebtec.com">Kalebtec</a></span>
+      </footer>
       <HowItWorks setDialog={(element) => { howDialog = element; }} />
     </div>
   );

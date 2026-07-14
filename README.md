@@ -9,6 +9,11 @@ The same skill runs in Claude Code and Codex. It can also audit an icon family,
 clean up an existing SVG, or take an approved mark straight to a reproducible
 brand asset suite.
 
+[Open the visual brief builder](https://icons.kalebtec.com/) without installing
+anything, then paste its compact export into your preferred chatbot.
+Agents and terminal users can read the complete single-file workflow at
+[icons.kalebtec.com/llms.txt](https://icons.kalebtec.com/llms.txt).
+
 ## Install in Codex
 
 You need a Codex build that includes the `codex plugin` command.
@@ -92,6 +97,17 @@ changing the web app, rebuild and sync that single-file bundle with:
 ```sh
 npm run build:plugin
 ```
+
+## Deploy on Netlify
+
+Netlify reads the production build, publish directory, and response headers from
+`netlify.toml`. Once the repository is linked to a Netlify project, deploy with:
+
+```sh
+netlify deploy --build --prod
+```
+
+The live builder is served at [icons.kalebtec.com](https://icons.kalebtec.com/).
 
 ## The three stages
 

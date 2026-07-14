@@ -11,6 +11,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "plugins" / "icon-design" / "skills" / "icon-design"
 SCRIPTS = SKILL / "scripts"
+LLMS = ROOT / "public" / "llms.txt"
 sys.path.insert(0, str(SCRIPTS))
 
 import launch_brief_builder  # noqa: E402
@@ -125,10 +126,23 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("Custom", source)
         self.assertIn("radiogroup", source)
         self.assertIn("Customize delivery", source)
+        self.assertIn("Made with love", source)
         self.assertRegex(source, r"conceptCount:\s*20")
         self.assertNotRegex(source, r"<script[^>]+src=")
         self.assertNotRegex(source, r"<link[^>]+stylesheet")
         self.assertTrue(path.as_uri().startswith("file://"))
+
+    def test_agent_guide_covers_the_complete_workflow(self):
+        source = LLMS.read_text(encoding="utf-8")
+        self.assertTrue(source.startswith("# Kalebtec Icon Design"))
+        self.assertIn("$icon-design", source)
+        self.assertIn("/icon-design:icon-design", source)
+        self.assertIn("D1-01", source)
+        self.assertIn("R1-01", source)
+        self.assertIn("render_concept_sheet.py", source)
+        self.assertIn("render_suite.py", source)
+        self.assertIn("validate_suite.py", source)
+        self.assertIn("Stop after the sheet", source)
 
 
 if __name__ == "__main__":

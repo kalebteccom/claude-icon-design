@@ -725,11 +725,19 @@ fieldset { margin: 0; padding: 0; border: 0; }
 footer {
   display: flex;
   justify-content: space-between;
+  align-items: end;
   gap: 20px;
   padding: 34px 0 0;
   color: var(--muted);
   font-size: 0.72rem;
 }
+
+.footer-meta { display: grid; gap: 3px; }
+.footer-meta span:first-child { color: var(--ink); font-weight: 650; }
+.footer-meta a { color: inherit; text-underline-offset: 3px; }
+.footer-credit { white-space: nowrap; }
+.footer-credit a { color: var(--ink); font-weight: 650; text-underline-offset: 3px; }
+.footer-heart { color: var(--accent); font-size: 0.82rem; }
 
 .how-dialog {
   width: min(680px, calc(100% - 28px));
@@ -842,7 +850,7 @@ footer {
   .matrix-cell { padding: 2px; border-radius: 5px; }
   .step-actions { align-items: stretch; }
   .step-actions .button { flex: 1; }
-  footer { display: grid; }
+  footer { display: grid; align-items: start; }
 }
 
 @media (max-width: 390px) {

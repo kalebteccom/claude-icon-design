@@ -1,12 +1,12 @@
 {
   "name": "icon-design",
-  "version": "1.3.0+codex.20260713215035",
+  "version": "1.3.1+codex.20260714095742",
   "description": "Discover, refine, validate, and package production-ready icons and compact brand marks.",
   "author": {
     "name": "Kalebtec",
     "url": "https://github.com/kalebteccom"
   },
-  "homepage": "https://github.com/kalebteccom/claude-icon-design",
+  "homepage": "https://icons.kalebtec.com/",
   "repository": "https://github.com/kalebteccom/claude-icon-design",
   "license": "MIT",
   "keywords": [
