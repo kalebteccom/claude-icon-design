@@ -37,6 +37,7 @@ PALETTE_KEYS = (
 GEOMETRY_DEFAULTS = {
     "tile_radius_ratio": 0.22,
     "favicon_mark_scale": 0.78,
+    "favicon_small_mark_scale": 1.0,
     "app_mark_scale": 0.78,
     "avatar_mark_scale": 0.86,
     "preview_margin_ratio": 0.098,
@@ -117,6 +118,14 @@ def load_design(path: Path) -> Dict:
     if source_svg.is_absolute() or ".." in source_svg.parts:
         raise ValueError("source_svg must stay inside the source directory")
 
+    source_small = design.get("source_small_svg")
+    if source_small is not None:
+        if not isinstance(source_small, str) or not source_small.strip():
+            raise ValueError("source_small_svg must be a non-empty path when present")
+        small_svg = Path(source_small)
+        if small_svg.is_absolute() or ".." in small_svg.parts:
+            raise ValueError("source_small_svg must stay inside the source directory")
+
     palette = design.get("palette")
     if not isinstance(palette, dict):
         raise ValueError("design.json requires a palette object")
@@ -138,7 +147,10 @@ def load_design(path: Path) -> Dict:
     for key, value in normalized_geometry.items():
         if not isinstance(value, (int, float)):
             raise ValueError(f"geometry.{key} must be numeric")
-        if not 0 < float(value) < 1:
+        if key.endswith("_scale"):
+            if not 0 < float(value) <= 1:
+                raise ValueError(f"geometry.{key} must be between 0 and 1 inclusive")
+        elif not 0 < float(value) < 1:
             raise ValueError(f"geometry.{key} must be between 0 and 1")
         normalized_geometry[key] = float(value)
     if normalized_geometry["preview_margin_ratio"] * 2 >= 1:
@@ -352,14 +364,18 @@ def background_body(design: Dict, canvas: float, rounded: bool = False) -> str:
     )
 
 
-def favicon_svg(design: Dict, body: str, canvas: float) -> str:
+def favicon_svg(
+    design: Dict, body: str, canvas: float, scale: Optional[float] = None
+) -> str:
+    if scale is None:
+        scale = design["geometry"]["favicon_mark_scale"]
     inner = (
         paint_defs(design, canvas)
         + background_body(design, canvas, rounded=True)
         + transformed_body(
             body,
             canvas,
-            design["geometry"]["favicon_mark_scale"],
+            scale,
             design["palette"]["paper"],
         )
     )
@@ -519,6 +535,12 @@ def readme_text(design: Dict) -> str:
     slug = design["slug"]
     palette = design["palette"]
     material = "subtle glass" if design["material"] == "glass" else "flat"
+    small_row = (
+        f"\n| `{slug}-mark-small.svg` | Dedicated small-size mark used for the "
+        "16 and 32 px favicons. |"
+        if design.get("source_small_svg")
+        else ""
+    )
     return f"""# {design["name"]} brand assets
 
 {design["description"]}
@@ -547,7 +569,7 @@ belong to derived assets, never to the core SVG.
 | File | What it is |
 | --- | --- |
 | `{slug}-mark.svg` | Canonical mark using `currentColor`. |
-| `{slug}-mark-black.svg` / `-white.svg` | Fixed ink and reverse variants. |
+| `{slug}-mark-black.svg` / `-white.svg` | Fixed ink and reverse variants. |{small_row}
 | `{slug}-favicon.svg` | Rounded tile favicon. |
 | `favicon.ico` | Multi-resolution 16/32/48 px favicon. |
 | `favicon-16.png` / `-32.png` / `-48.png` | Exact raster favicon sizes. |
@@ -613,6 +635,13 @@ def render(
     if zip_path is not None and output.resolve() in zip_path.resolve().parents:
         raise ValueError("Write the zip beside the suite, not inside it")
     body, canvas = svg_parts(source_svg)
+    small_body: Optional[str] = None
+    small_canvas = canvas
+    if design.get("source_small_svg"):
+        small_svg = (source / design["source_small_svg"]).resolve()
+        if source.resolve() not in small_svg.parents:
+            raise ValueError("source_small_svg resolves outside the source directory")
+        small_body, small_canvas = svg_parts(small_svg)
     output.mkdir(parents=True, exist_ok=True)
     generated: List[Path] = []
     slug = design["slug"]
@@ -630,12 +659,27 @@ def render(
         svg_document(body, canvas, design["aria_label"], palette["paper"], False),
         generated,
     )
+    if small_body is not None:
+        write_text(
+            output / f"{slug}-mark-small.svg",
+            svg_document(small_body, small_canvas, design["aria_label"]),
+            generated,
+        )
 
     favicon_value = favicon_svg(design, body, canvas)
     write_text(output / f"{slug}-favicon.svg", favicon_value, generated)
+    small_favicon_value = favicon_value
+    if small_body is not None:
+        small_favicon_value = favicon_svg(
+            design,
+            small_body,
+            small_canvas,
+            design["geometry"]["favicon_small_mark_scale"],
+        )
     favicon_images: Dict[int, Image.Image] = {}
     for size in (16, 32, 48):
-        image = png_from_svg(favicon_value, size)
+        value = small_favicon_value if size < 48 else favicon_value
+        image = png_from_svg(value, size)
         favicon_images[size] = image
         save_image(image, output / f"favicon-{size}.png", generated)
     save_image(
@@ -643,7 +687,10 @@ def render(
     )
     ico_path = output / "favicon.ico"
     favicon_images[48].save(
-        ico_path, format="ICO", sizes=[(16, 16), (32, 32), (48, 48)]
+        ico_path,
+        format="ICO",
+        append_images=[favicon_images[32], favicon_images[16]],
+        sizes=[(48, 48), (32, 32), (16, 16)],
     )
     generated.append(ico_path)
 
@@ -685,18 +732,15 @@ def render(
         "RGBA", (560, 180), ImageColor.getrgb(palette["background_bottom"]) + (255,)
     )
     favicon_sheet.alpha_composite(png_from_svg(favicon_value, 128), (28, 26))
-    favicon_sheet.alpha_composite(
-        favicon_images[32].resize((64, 64), NEAREST), (232, 58)
-    )
-    favicon_sheet.alpha_composite(favicon_images[32], (248, 74))
-    favicon_sheet.alpha_composite(
-        favicon_images[16].resize((64, 64), NEAREST), (406, 58)
-    )
-    favicon_sheet.alpha_composite(favicon_images[16], (430, 82))
+    favicon_sheet.alpha_composite(favicon_images[48], (236, 66))
+    favicon_sheet.alpha_composite(favicon_images[32], (344, 74))
+    favicon_sheet.alpha_composite(favicon_images[16], (436, 82))
     save_image(favicon_sheet, output / "favicon-preview.png", generated)
 
     reproducible_design = json.loads(json.dumps(design))
     reproducible_design["source_svg"] = f"{slug}-mark.svg"
+    if small_body is not None:
+        reproducible_design["source_small_svg"] = f"{slug}-mark-small.svg"
     write_text(
         output / "design.json",
         json.dumps(reproducible_design, indent=2, ensure_ascii=False) + "\n",

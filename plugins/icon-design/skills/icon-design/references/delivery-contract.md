@@ -11,6 +11,13 @@ Prepare two files:
   `currentColor`, no external resources or scripts.
 - `design.json`: name, slug, story, palette, placement, material, and asset
   license. Copy the bundled example and replace every example value.
+- `mark-small.svg` (optional): a dedicated small-size drawing referenced as
+  `source_small_svg` in `design.json`. When present, the 16 and 32 px favicons
+  and the matching `favicon.ico` layers render from it at
+  `geometry.favicon_small_mark_scale` (default `1.0`, allowing a full-bleed
+  plate that avoids tile-in-tile double framing). Larger assets keep using the
+  primary master. Use it when the master's fine details seal or smear below
+  48 px.
 
 Keep the source SVG optically centered in its own viewBox. Placement scales in
 `design.json` position that same master inside favicon, app, and avatar contexts.
@@ -25,7 +32,8 @@ The renderer writes a flat, zip-friendly directory:
 | `<slug>-mark-black.svg` | Fixed primary-ink vector. |
 | `<slug>-mark-white.svg` | Fixed reverse/paper vector. |
 | `<slug>-favicon.svg` | Rounded tile favicon. |
-| `favicon.ico` | Multi-size 16/32/48 px favicon. |
+| `favicon.ico` | Multi-size 16/32/48 px favicon; every layer uses its own native render. |
+| `<slug>-mark-small.svg` | Only with `source_small_svg`: the small-size mark. |
 | `favicon-16.png`, `-32.png`, `-48.png` | Exact raster favicon sizes. |
 | `apple-touch-icon.png` | 180 px touch icon. |
 | `<slug>-app-icon-1024.png` | Opaque full-bleed app-icon master. |
@@ -45,6 +53,9 @@ The neighboring `<slug>-brand-suite.zip` must contain the same files without an
 extra top-level directory, matching the shape of a conventional handoff zip.
 
 ## Visual checks
+
+`favicon-preview.png` shows the large favicon plus the native 48, 32, and
+16 px renders, each drawn once on its own.
 
 Open the comparison sheets after rendering. Also inspect the 16 and 32 px PNGs
 at native size. Confirm:

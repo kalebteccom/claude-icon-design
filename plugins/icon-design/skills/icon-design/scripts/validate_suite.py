@@ -20,8 +20,8 @@ except ModuleNotFoundError as error:
 from render_suite import load_design, png_from_svg, svg_parts
 
 
-def expected_files(slug: str) -> Set[str]:
-    return {
+def expected_files(slug: str, include_small: bool = False) -> Set[str]:
+    files = {
         "LICENSE",
         "README.md",
         "apple-touch-icon.png",
@@ -44,6 +44,9 @@ def expected_files(slug: str) -> Set[str]:
         f"{slug}-mark-white.svg",
         f"{slug}-mark.svg",
     }
+    if include_small:
+        files.add(f"{slug}-mark-small.svg")
+    return files
 
 
 def relative_files(root: Path) -> Set[str]:
@@ -105,7 +108,7 @@ def validate_suite(root: Path, archive: Optional[Path] = None) -> List[str]:
         raise ValueError(f"Suite directory does not exist: {root}")
     design = load_design(root / "design.json")
     slug = design["slug"]
-    expected = expected_files(slug)
+    expected = expected_files(slug, bool(design.get("source_small_svg")))
     actual = relative_files(root)
     missing = sorted(expected - actual)
     extras = sorted(actual - expected)
@@ -141,6 +144,11 @@ def validate_suite(root: Path, archive: Optional[Path] = None) -> List[str]:
         parse_svg(fixed_path)
         if "currentColor" in fixed_text:
             raise ValueError(f"{fixed_path.name} still contains currentColor")
+
+    if design.get("source_small_svg"):
+        small_body, small_canvas = svg_parts(root / f"{slug}-mark-small.svg")
+        if small_canvas <= 0 or not small_body:
+            raise ValueError("The small-size SVG geometry is invalid")
 
     parse_svg(root / f"{slug}-favicon.svg")
 

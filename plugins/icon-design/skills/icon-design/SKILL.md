@@ -123,7 +123,10 @@ canonical parent unless optical correction is necessary. Build a simple
 production package by default. Delivery options only change the package when
 the user explicitly asks.
 
-Create `final/source/design.json` and `final/source/mark.svg`, then run:
+Create `final/source/design.json` and `final/source/mark.svg`. If the mark's
+fine details seal or smear at 16-32 px, also draw `final/source/mark-small.svg`
+and reference it as `source_small_svg` in `design.json`; the suite then renders
+the small favicons from it automatically. Then run:
 
 ```sh
 python3 "<skill-directory>/scripts/render_suite.py" \

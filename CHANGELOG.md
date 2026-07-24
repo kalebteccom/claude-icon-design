@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.6.0 - 2026-07-24
+
+- Added optional dedicated small-size favicon support: `source_small_svg` in
+  `design.json` (plus `geometry.favicon_small_mark_scale`, default 1.0) renders
+  the 16 and 32 px favicons from their own drawing, ships the small mark in the
+  suite as `<slug>-mark-small.svg`, and keeps reproduction and validation
+  intact.
+- Built every `favicon.ico` layer from its own native render instead of
+  downsampling the 48 px image.
+- Redrew `favicon-preview.png` to show the large favicon and each native size
+  once, on its own, replacing the native-over-pixelated-upscale stacking that
+  read as a rendering bug.
+- Allowed `*_scale` geometry values to reach exactly 1.0 for full-bleed
+  placement.
+
 ## 1.5.1 - 2026-07-14
 
 - Replaced the binary theme toggle with a System, Light, and Dark selector.
