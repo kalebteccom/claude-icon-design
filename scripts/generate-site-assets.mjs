@@ -25,8 +25,11 @@ for (const size of [16, 32, 48]) {
   await writeFile(resolve(publicDirectory, `favicon-${size}x${size}.png`), rendered);
 }
 
+// iOS fills transparent touch-icon pixels with black, which hides the dark
+// mark, so the touch icon sits on the light page color.
 await sharp(favicon, { density: 384 })
   .resize(180, 180, { fit: "fill" })
+  .flatten({ background: "#f1f0e4" })
   .png({ compressionLevel: 9 })
   .toFile(resolve(publicDirectory, "apple-touch-icon.png"));
 
