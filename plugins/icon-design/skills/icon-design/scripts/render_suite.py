@@ -365,13 +365,17 @@ def background_body(design: Dict, canvas: float, rounded: bool = False) -> str:
 
 
 def favicon_svg(
-    design: Dict, body: str, canvas: float, scale: Optional[float] = None
+    design: Dict,
+    body: str,
+    canvas: float,
+    scale: Optional[float] = None,
+    rounded: bool = True,
 ) -> str:
     if scale is None:
         scale = design["geometry"]["favicon_mark_scale"]
     inner = (
         paint_defs(design, canvas)
-        + background_body(design, canvas, rounded=True)
+        + background_body(design, canvas, rounded=rounded)
         + transformed_body(
             body,
             canvas,
@@ -573,7 +577,7 @@ belong to derived assets, never to the core SVG.
 | `{slug}-favicon.svg` | Rounded tile favicon. |
 | `favicon.ico` | Multi-resolution 16/32/48 px favicon. |
 | `favicon-16.png` / `-32.png` / `-48.png` | Exact raster favicon sizes. |
-| `apple-touch-icon.png` | 180 px touch icon. |
+| `apple-touch-icon.png` | Opaque full-bleed 180 px touch icon. |
 | `{slug}-app-icon-1024.png` | Opaque full-bleed app-icon master. |
 | `{slug}-app-icon-preview-1024.png` | Transparent rounded-square preview. |
 | `{slug}-avatar-512.png` | Social avatar with circle-safe placement. |
@@ -590,7 +594,7 @@ python3 -m pip install -r requirements.txt
 python3 render.py --source . --output .
 ```
 
-The full-bleed app icon and avatar are opaque. The rounded preview and flat mark
+The full-bleed app icon, touch icon, and avatar are opaque. The rounded preview and flat mark
 layer retain transparency.
 """
 
@@ -682,8 +686,15 @@ def render(
         image = png_from_svg(value, size)
         favicon_images[size] = image
         save_image(image, output / f"favicon-{size}.png", generated)
+    # iOS applies its own corner mask and fills transparent pixels with black,
+    # so the touch icon is the full-bleed square tile.
+    touch_value = favicon_svg(
+        design, body, canvas, design["geometry"]["app_mark_scale"], rounded=False
+    )
     save_image(
-        png_from_svg(favicon_value, 180), output / "apple-touch-icon.png", generated
+        png_from_svg(touch_value, 180).convert("RGB"),
+        output / "apple-touch-icon.png",
+        generated,
     )
     ico_path = output / "favicon.ico"
     favicon_images[48].save(

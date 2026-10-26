@@ -154,7 +154,7 @@ def validate_suite(root: Path, archive: Optional[Path] = None) -> List[str]:
 
     for size in (16, 32, 48):
         inspect_png(root / f"favicon-{size}.png", (size, size), "RGBA")
-    inspect_png(root / "apple-touch-icon.png", (180, 180), "RGBA")
+    inspect_png(root / "apple-touch-icon.png", (180, 180), "RGB")
     inspect_png(root / f"{slug}-app-icon-1024.png", (1024, 1024), "RGB")
     rounded = inspect_png(
         root / f"{slug}-app-icon-preview-1024.png", (1024, 1024), "RGBA"
