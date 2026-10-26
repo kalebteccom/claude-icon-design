@@ -1076,6 +1076,23 @@ footer {
     background: Canvas;
     color: CanvasText;
   }
+
+  .style-check { color: Canvas; }
+
+  .style-card:has(input:checked) .style-check,
+  .stepper button.current .step-number {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .style-card:has(input:checked),
+  .preset-card.selected,
+  .mode-switch button.active,
+  .matrix-cell:has(input:checked) {
+    border: 3px solid Highlight;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
