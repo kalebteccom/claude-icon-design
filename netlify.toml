@@ -21,8 +21,3 @@
 
   [headers.values]
     Content-Type = "application/manifest+json; charset=utf-8"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200

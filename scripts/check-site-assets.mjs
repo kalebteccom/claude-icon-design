@@ -40,6 +40,11 @@ if (manifest.icons.some((icon) => icon.purpose.includes("maskable"))) {
   throw new Error("site.webmanifest must not restore the background-tile icon");
 }
 
+const netlify = await readFile(resolve("netlify.toml"), "utf8");
+if (/\[\[redirects\]\][^[]*from\s*=\s*"\/\*"[^[]*status\s*=\s*200/.test(netlify)) {
+  throw new Error("netlify.toml must not rewrite every path to index.html; unknown URLs should return 404");
+}
+
 const robots = await readFile(resolve("public/robots.txt"), "utf8");
 requireText(robots, "Sitemap: https://icons.kalebtec.com/sitemap.xml", "robots.txt");
 
