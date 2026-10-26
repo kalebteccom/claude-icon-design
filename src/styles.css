@@ -153,6 +153,7 @@ a { color: inherit; }
 
 .brand {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 10px;
   text-decoration: none;
@@ -178,6 +179,9 @@ a { color: inherit; }
 }
 
 .header-actions > a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   color: var(--muted);
   font-size: 0.82rem;
   text-underline-offset: 4px;
@@ -187,7 +191,7 @@ a { color: inherit; }
 
 .theme-selector select {
   width: 104px;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 10px;
   border: 1px solid var(--control-line);
   border-radius: 999px;
@@ -316,6 +320,8 @@ a { color: inherit; }
 .stepper button {
   display: flex;
   width: 100%;
+  min-width: 44px;
+  min-height: 44px;
   align-items: center;
   gap: 10px;
   padding: 0;
@@ -417,7 +423,7 @@ textarea::placeholder { color: var(--muted); opacity: 1; }
 
 .button {
   display: inline-flex;
-  min-height: 43px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   padding: 0 15px;
@@ -439,9 +445,10 @@ textarea::placeholder { color: var(--muted); opacity: 1; }
   color: var(--accent-ink);
 }
 
-.button.subtle { min-height: 38px; background: transparent; }
+.button.subtle { background: transparent; }
 
 .text-button {
+  min-height: 44px;
   padding: 8px 0;
   border: 0;
   background: transparent;
@@ -661,7 +668,7 @@ fieldset { margin: 0; padding: 0; border: 0; }
 
 .axis-label label { font-size: 0.82rem; font-weight: 660; }
 .axis-label output { color: var(--muted); font-size: 0.75rem; }
-.axis-control input[type="range"] { width: 100%; min-height: 28px; accent-color: var(--accent-fill); }
+.axis-control input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--accent-fill); }
 .axis-ends { color: var(--muted); font-size: 0.67rem; }
 
 .matrix-section {
@@ -723,6 +730,7 @@ fieldset { margin: 0; padding: 0; border: 0; }
 }
 
 .delivery-options summary {
+  min-height: 44px;
   padding: 18px 0 4px;
   cursor: pointer;
   font-size: 0.84rem;
@@ -768,7 +776,7 @@ fieldset { margin: 0; padding: 0; border: 0; }
 .mini-character strong { overflow: hidden; font-size: 0.86rem; font-weight: 660; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap; }
 .output-panel h2 { margin-bottom: 16px; font-size: 1.5rem; }
 .field.compact { margin-bottom: 12px; }
-.field.compact select { min-height: 42px; }
+.field.compact select { min-height: 44px; }
 .target-note { margin: -3px 0 13px; color: var(--muted); font-size: 0.7rem; line-height: 1.45; }
 .target-note a { color: var(--ink); text-underline-offset: 3px; }
 
@@ -1018,8 +1026,8 @@ footer {
 
 .icon-button {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   flex: 0 0 auto;
   place-items: center;
   border: 1px solid var(--control-line);
