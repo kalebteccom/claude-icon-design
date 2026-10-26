@@ -1,4 +1,5 @@
 import { render } from "solid-js/web";
+import { version } from "../package.json";
 import App from "./App";
 import "./styles.css";
 
@@ -18,5 +19,5 @@ declare global {
 
 window.__ICON_BRIEF_BUILDER__ = {
   schema: "kalebtec.icon-brief.v1",
-  version: "1.5.1"
+  version
 };
