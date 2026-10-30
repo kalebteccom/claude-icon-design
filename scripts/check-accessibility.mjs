@@ -50,3 +50,21 @@ for (const [name, theme] of Object.entries(themes)) {
   }
   console.log(`${name} theme contrast checks passed.`);
 }
+
+const forcedColors = css.match(/@media \(forced-colors: active\) \{([\s\S]*?)\n\}/);
+if (!forcedColors) throw new Error("styles.css has no forced-colors block");
+for (const selector of [
+  ".style-card:has(input:checked)",
+  ".preset-card.selected",
+  ".mode-switch button.active",
+  ".matrix-cell:has(input:checked)"
+]) {
+  const rule = forcedColors[1].match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*(?:,[^{]*)?\\{([^}]*)\\}`));
+  if (!rule || !rule[1].includes("Highlight")) {
+    throw new Error(`${selector} needs a Highlight indicator in forced-colors mode`);
+  }
+}
+if (!/\.style-check \{ color: Canvas; \}/.test(forcedColors[1])) {
+  throw new Error("Unchecked style marks must stay hidden in forced-colors mode");
+}
+console.log("Forced-colors selection checks passed.");

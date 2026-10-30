@@ -35,7 +35,7 @@ The renderer writes a flat, zip-friendly directory:
 | `favicon.ico` | Multi-size 16/32/48 px favicon; every layer uses its own native render. |
 | `<slug>-mark-small.svg` | Only with `source_small_svg`: the small-size mark. |
 | `favicon-16.png`, `-32.png`, `-48.png` | Exact raster favicon sizes. |
-| `apple-touch-icon.png` | 180 px touch icon. |
+| `apple-touch-icon.png` | Opaque full-bleed 180 px touch icon. |
 | `<slug>-app-icon-1024.png` | Opaque full-bleed app-icon master. |
 | `<slug>-app-icon-preview-1024.png` | Transparent rounded-square preview. |
 | `<slug>-avatar-512.png` | Opaque, circle-crop-safe avatar. |
@@ -65,7 +65,8 @@ at native size. Confirm:
 - the mark is optically centered in square and circular crops;
 - the tile radius and mark scale feel related;
 - the light mark has at least 3:1 contrast against both background endpoints;
-- the app master is opaque and the rounded preview has transparent corners;
+- the app master and touch icon are opaque and the rounded preview has
+  transparent corners;
 - the Composer mark layer is flat and transparent outside the mark;
 - fixed SVG variants contain no `currentColor` token;
 - the canonical SVG contains no embedded image, script, or external reference.

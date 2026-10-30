@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Made the site and suite Apple touch icons opaque so iOS no longer fills
+  them with black, showed selected choices in forced-colors mode, raised
+  builder controls to 44 px touch targets, returned 404 for unknown paths, and
+  reported the package version from the builder.
+
 ## 1.6.0 - 2026-07-24
 
 - Added optional dedicated small-size favicon support: `source_small_svg` in

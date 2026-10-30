@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "plugins" / "icon-design" / "skills" / "icon-design" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
+from PIL import Image, ImageColor  # noqa: E402
+
 import render_suite  # noqa: E402
 import validate_suite  # noqa: E402
 
@@ -36,6 +38,20 @@ class SuiteTests(unittest.TestCase):
             self.assertEqual(len(files), 21)
             validated = validate_suite.validate_suite(output, archive)
             self.assertEqual(len(validated), 21)
+
+            with Image.open(output / "apple-touch-icon.png") as touch:
+                self.assertEqual(touch.mode, "RGB")
+                tile = ImageColor.getrgb(
+                    json.loads((source / "design.json").read_text())["palette"][
+                        "background_top"
+                    ]
+                )
+                corner = touch.getpixel((0, 0))
+                self.assertLess(
+                    max(abs(a - b) for a, b in zip(corner, tile)),
+                    12,
+                    "the touch icon corner should be tile color, not iOS black fill",
+                )
 
             first_hash = hashlib.sha256(archive.read_bytes()).hexdigest()
             render_suite.render(output, output, archive)

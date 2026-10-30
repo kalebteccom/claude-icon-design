@@ -40,6 +40,11 @@ if (manifest.icons.some((icon) => icon.purpose.includes("maskable"))) {
   throw new Error("site.webmanifest must not restore the background-tile icon");
 }
 
+const netlify = await readFile(resolve("netlify.toml"), "utf8");
+if (/\[\[redirects\]\][^[]*from\s*=\s*"\/\*"[^[]*status\s*=\s*200/.test(netlify)) {
+  throw new Error("netlify.toml must not rewrite every path to index.html; unknown URLs should return 404");
+}
+
 const robots = await readFile(resolve("public/robots.txt"), "utf8");
 requireText(robots, "Sitemap: https://icons.kalebtec.com/sitemap.xml", "robots.txt");
 
@@ -68,7 +73,17 @@ if (faviconSvg.includes("<rect") || !faviconSvg.includes("prefers-color-scheme: 
   throw new Error("favicon.svg must use the adaptive standalone Kalebtec mark");
 }
 
-for (const filename of ["apple-touch-icon.png", "icon-192.png", "icon-512.png"]) {
+{
+  const { data, info } = await sharp(resolve("public", "apple-touch-icon.png"))
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  for (let index = 3; index < data.length; index += info.channels) {
+    if (data[index] !== 255) throw new Error("apple-touch-icon.png must be opaque; iOS fills transparency with black");
+  }
+}
+
+for (const filename of ["icon-192.png", "icon-512.png"]) {
   const { data } = await sharp(resolve("public", filename))
     .ensureAlpha()
     .raw()
